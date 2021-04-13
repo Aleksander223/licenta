@@ -7,6 +7,7 @@ import TokenLogin from "./components/TokenLogin";
 
 import Homepage from "./pages/Homepage";
 import Tokens from "./pages/Tokens";
+import Upload from "./pages/Upload";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route exact path="/" component={TokenLogin}></Route>
         <Route exact path="/admin" component={Homepage}></Route>
         <Route exact path="/tokens" component={Tokens}></Route>
+        <Route exact path="/upload" component={Upload}></Route>
       </Switch>
     </BrowserRouter>
     </>
