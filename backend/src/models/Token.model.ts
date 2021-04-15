@@ -28,6 +28,8 @@ const tokenSchema = new mongoose.Schema({
         type: mongoose.SchemaTypes.Boolean,
         default: false
     }
+
+    // store sent evaluations, unsent evaluations
 });
 
 const Token = mongoose.model<IToken>("Token", tokenSchema);
