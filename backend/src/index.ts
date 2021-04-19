@@ -1,11 +1,12 @@
 import express from "express";
-import dotenv from "dotenv";
+import dotenv, { parse } from "dotenv";
 
 import mongoose from "mongoose";
 
-import ExampleRouter from "./routers/ExampleRouter";
+import UserRouter from "./routers/UserRouter";
+import StudentRouter from "./routers/StudentRouter";
 
-import {Token} from "./models/Token.model";
+import { parseXML } from "./services/parseXML";
 
 dotenv.config();
 
@@ -15,7 +16,8 @@ const app = express();
 app.use(express.json());
 
 // routes
-app.use(ExampleRouter);
+app.use(UserRouter);
+app.use(StudentRouter);
 
 app.listen(process.env.BACKEND_PORT, async () => {
     if (!process.env.MONGO_DB_URL) {
@@ -33,8 +35,5 @@ app.listen(process.env.BACKEND_PORT, async () => {
 
     console.log(`Backend running on port ${process.env.BACKEND_PORT}`);
 
-    const token = new Token();
-    console.log(token);
-
-    await token.save();
+    parseXML();
 });
