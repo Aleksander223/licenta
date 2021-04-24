@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 interface IGroup extends mongoose.Document {
+    name: string;
     numberOfStudents: number;
     courses: Array<String>;
     series: string;
@@ -9,6 +10,9 @@ interface IGroup extends mongoose.Document {
 }
 
 const groupSchema = new mongoose.Schema({
+    name: {
+        type: mongoose.SchemaTypes.String
+    },
     numberOfStudents: {
         type: mongoose.SchemaTypes.Number
     },

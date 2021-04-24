@@ -5,8 +5,7 @@ import mongoose from "mongoose";
 
 import UserRouter from "./routers/UserRouter";
 import StudentRouter from "./routers/StudentRouter";
-
-import { parseXML } from "./services/parseXML";
+import QuizRouter from "./routers/QuizRouter";
 
 dotenv.config();
 
@@ -18,6 +17,7 @@ app.use(express.json());
 // routes
 app.use(UserRouter);
 app.use(StudentRouter);
+app.use(QuizRouter);
 
 app.listen(process.env.BACKEND_PORT, async () => {
     if (!process.env.MONGO_DB_URL) {
@@ -34,6 +34,4 @@ app.listen(process.env.BACKEND_PORT, async () => {
     console.log('Sucesfully connected to MongoDB');
 
     console.log(`Backend running on port ${process.env.BACKEND_PORT}`);
-
-    parseXML();
 });

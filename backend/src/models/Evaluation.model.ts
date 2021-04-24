@@ -1,26 +1,9 @@
 import mongoose from "mongoose";
 
-enum QuizletType{
-    RADIO,
-    TEXT
-}
-
-interface IQuizlet {
-    question: string;
-    choices?: Array<string>;
-    answerType: QuizletType;
-    answer?: string | number;
-}
-
-interface ISection {
-    label: string;
-    quizlets: Array<IQuizlet>;
-}
-
 interface IEvaluation extends mongoose.Document {
     course: string;
     activityEvaluationId: string;
-    quiz: Array<ISection>;
+    series: number;
 }
 
 const evaluationSchema = new mongoose.Schema({
@@ -34,24 +17,7 @@ const evaluationSchema = new mongoose.Schema({
     },
     series: {
         type: mongoose.SchemaTypes.Number
-    },
-    quiz: [
-        {
-            label: mongoose.SchemaTypes.String,
-            quizlets: [
-                {
-                    question: mongoose.SchemaTypes.String,
-                    choices: [
-                        {
-                            type: mongoose.SchemaTypes.String
-                        }
-                    ],
-                    answer: mongoose.SchemaTypes.Mixed,
-                    answerType: mongoose.SchemaTypes.Number
-                }
-            ],
-        }
-    ]
+    }
 });
 
 const Evaluation = mongoose.model<IEvaluation>("Evaluation", evaluationSchema);
