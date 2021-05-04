@@ -2,11 +2,16 @@ import mongoose from "mongoose";
 
 import { ulid } from 'ulid';
 
+import { ISession } from './Session.model';
+import { IGroup } from "./Group.model";
+
 interface IToken extends mongoose.Document {
     value: string;
-    session: string;
-    group: string;
+    session: string | ISession;
+    group: string  | IGroup;
     used: boolean;
+    sentEvaluations: Array<string>;
+    unsentEvalations: Array<string>;
 }
 
 const tokenSchema = new mongoose.Schema({
@@ -27,7 +32,17 @@ const tokenSchema = new mongoose.Schema({
     used: {
         type: mongoose.SchemaTypes.Boolean,
         default: false
-    }
+    },
+    sentEvaluations: [
+        {
+            type: mongoose.SchemaTypes.String
+        }
+    ],
+    unsentEvaluations: [
+        {
+            type: mongoose.SchemaTypes.String
+        }
+    ]
 
     // store sent evaluations, unsent evaluations
 });

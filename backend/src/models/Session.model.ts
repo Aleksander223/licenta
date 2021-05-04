@@ -1,10 +1,13 @@
 import mongoose from "mongoose";
 
+import { IQuiz } from "./Quiz.model";
+
 interface ISession extends mongoose.Document {
-    startDate: Date,
-    endDate: Date,
-    finalYear: boolean,
-    semester: number,
+    startDate: Date;
+    endDate: Date;
+    finalYear: boolean;
+    semester: number;
+    quiz: string | IQuiz
 };
 
 const sessionSchema = new mongoose.Schema({
@@ -19,6 +22,10 @@ const sessionSchema = new mongoose.Schema({
     },
     semester: {
         type: mongoose.SchemaTypes.Number
+    },
+    quiz: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'Quiz'
     }
 });
 
