@@ -1,19 +1,19 @@
 import mongoose from "mongoose";
 
-enum QuizletType{
+enum QuestionType{
     RADIO,
     TEXT
 }
 
-interface IQuizlet {
-    question: string;
+interface IQuestion {
+    definition: string;
     choices?: Array<string>;
-    answerType: QuizletType;
+    answerType: QuestionType;
 }
 
 interface ISection {
     label: string;
-    quizlets: Array<IQuizlet>;
+    questions: Array<IQuestion>;
 }
 
 interface IQuiz extends mongoose.Document {
@@ -24,9 +24,9 @@ const quizSchema = new mongoose.Schema({
     quiz: [
         {
             label: mongoose.SchemaTypes.String,
-            quizlets: [
+            questions: [
                 {
-                    question: mongoose.SchemaTypes.String,
+                    definition: mongoose.SchemaTypes.String,
                     choices: [
                         {
                             type: mongoose.SchemaTypes.String
@@ -41,4 +41,4 @@ const quizSchema = new mongoose.Schema({
 
 const Quiz = mongoose.model<IQuiz>("Quiz", quizSchema);
 
-export { Quiz, IQuiz }
+export { Quiz, IQuiz, QuestionType }
