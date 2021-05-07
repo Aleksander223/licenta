@@ -1,13 +1,15 @@
 import express from "express";
 import dotenv, { parse } from "dotenv";
 
+dotenv.config();
+
 import mongoose from "mongoose";
 
 import UserRouter from "./routers/UserRouter";
 import StudentRouter from "./routers/StudentRouter";
 import QuizRouter from "./routers/QuizRouter";
+import CourseRouter from "./routers/CourseRouter";
 
-dotenv.config();
 
 const app = express();
 
@@ -18,6 +20,7 @@ app.use(express.json());
 app.use(UserRouter);
 app.use(StudentRouter);
 app.use(QuizRouter);
+app.use(CourseRouter);
 
 app.listen(process.env.BACKEND_PORT, async () => {
     if (!process.env.MONGO_DB_URL) {

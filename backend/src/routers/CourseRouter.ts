@@ -1,10 +1,11 @@
 import express from "express";
-import { parseXML } from "../services/parseXML";
 
-import { Quiz } from "../models/Quiz.model";
+const router = express.Router();
 
 import path from "path";
 import multer from "multer";
+import { parseCourseCSV } from "../services/parseCSV";
+import { Course } from "../models/Course.model";
 
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -13,7 +14,7 @@ const upload = multer({
         files: 1
     },
     fileFilter: (req, file, cb) => {
-        if (path.extname(file.originalname) !== '.xml') {
+        if (path.extname(file.originalname) !== '.csv') {
             return cb(new Error("Invalid filetype"));
         }
 
@@ -21,17 +22,17 @@ const upload = multer({
     }
 });
 
-const router = express.Router();
-
-router.post("/quiz", upload.single('file'), async (req, res) => {
+router.post("/courses", upload.single("file"), async (req, res) => {
     try {
-        const parsedXML = await parseXML(req.file.buffer.toString());
+        const courses = await parseCourseCSV(req.file.buffer.toString());
 
-        const quiz = new Quiz(parsedXML);
+        await Course.deleteMany({});
 
-        await quiz.save();
-    
-        res.status(201).send(quiz);
+        for await (const course of courses) {
+            await new Course(course).save();
+        }
+
+        return res.status(201).send();
     } catch (error) {
         console.log(error);
         return res.status(500).send({

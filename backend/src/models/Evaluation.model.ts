@@ -1,19 +1,22 @@
 import mongoose from "mongoose";
 
+import { ICourse } from "./Course.model";
+import { IProfessor } from "./Professor.model";
+
 interface IEvaluation extends mongoose.Document {
-    course: string;
-    activityEvaluationId: string;
+    course: string | ICourse;
+    professor: string | IProfessor;
     series: number;
 }
 
 const evaluationSchema = new mongoose.Schema({
-    courseId: {
+    course: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'Course'
     },
-    professorId: {
+    professor: {
         type: mongoose.SchemaTypes.ObjectId,
-        ref: 'User'
+        ref: 'Professor'
     },
     series: {
         type: mongoose.SchemaTypes.Number

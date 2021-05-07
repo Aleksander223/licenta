@@ -6,6 +6,7 @@ interface ICourse extends mongoose.Document {
     course: boolean,
     laboratory: boolean,
     practice: boolean,
+    seminar: boolean,
     specialization: string,
     name: string
 };
@@ -24,6 +25,9 @@ const courseSchema = new mongoose.Schema({
         type: mongoose.SchemaTypes.Boolean
     },
     practice: {
+        type: mongoose.SchemaTypes.Boolean
+    },
+    seminar: {
         type: mongoose.SchemaTypes.Boolean
     },
     specialization: {

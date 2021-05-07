@@ -21,22 +21,27 @@ interface IQuiz extends mongoose.Document {
 }
 
 const quizSchema = new mongoose.Schema({
-    quiz: [
-        {
-            label: mongoose.SchemaTypes.String,
-            questions: [
-                {
-                    definition: mongoose.SchemaTypes.String,
-                    choices: [
-                        {
-                            type: mongoose.SchemaTypes.String
-                        }
-                    ],
-                    answerType: mongoose.SchemaTypes.Number
-                }
-            ],
-        }
-    ]
+    quiz: {
+        sections: [
+            {
+                label: {
+                    type: mongoose.SchemaTypes.String,
+                    default: ""
+                },
+                questions: [
+                    {
+                        definition: mongoose.SchemaTypes.String,
+                        choices: [
+                            {
+                                type: mongoose.SchemaTypes.String
+                            }
+                        ],
+                        answerType: mongoose.SchemaTypes.Number
+                    }
+                ],
+            }
+        ]
+    }
 });
 
 const Quiz = mongoose.model<IQuiz>("Quiz", quizSchema);
