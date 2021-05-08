@@ -9,7 +9,7 @@ import UserRouter from "./routers/UserRouter";
 import StudentRouter from "./routers/StudentRouter";
 import QuizRouter from "./routers/QuizRouter";
 import CourseRouter from "./routers/CourseRouter";
-
+import GroupRouter from "./routers/GroupRouter";
 
 const app = express();
 
@@ -21,6 +21,7 @@ app.use(UserRouter);
 app.use(StudentRouter);
 app.use(QuizRouter);
 app.use(CourseRouter);
+app.use(GroupRouter);
 
 app.listen(process.env.BACKEND_PORT, async () => {
     if (!process.env.MONGO_DB_URL) {

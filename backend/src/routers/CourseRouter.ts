@@ -22,6 +22,21 @@ const upload = multer({
     }
 });
 
+router.get("/courses", async (req, res) => {
+    try {
+        const courses = await Course.find();
+
+        return res.status(200).send({
+            courses
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            error
+        });
+    }
+});
+
 router.post("/courses", upload.single("file"), async (req, res) => {
     try {
         const courses = await parseCourseCSV(req.file.buffer.toString());
@@ -33,6 +48,38 @@ router.post("/courses", upload.single("file"), async (req, res) => {
         }
 
         return res.status(201).send();
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            error
+        });
+    }
+});
+
+router.put("/course/:id", async(req, res) => {
+    try {
+        const course = await Course.findByIdAndUpdate(req.params.id, req.body);
+
+        if (!course) {
+            return res.status(404).send({
+                error: "Course not found"
+            });
+        }
+        await course.save();
+        return res.status(200).send(course);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            error
+        });
+    } 
+});
+
+router.delete("/course/:id", async (req, res) => {
+    try {
+        await Course.findByIdAndDelete(req.params.id);
+
+        return res.status(200).send();
     } catch (error) {
         console.log(error);
         return res.status(500).send({

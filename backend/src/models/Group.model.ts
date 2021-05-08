@@ -37,9 +37,6 @@ const groupSchema = new mongoose.Schema({
     },
     year: {
         type: mongoose.SchemaTypes.Number
-    },
-    studyFormation: {
-        type: mongoose.SchemaTypes.String
     }
 });
 

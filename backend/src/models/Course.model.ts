@@ -8,7 +8,8 @@ interface ICourse extends mongoose.Document {
     practice: boolean,
     seminar: boolean,
     specialization: string,
-    name: string
+    name: string,
+    code: string
 };
 
 const courseSchema = new mongoose.Schema({
@@ -34,6 +35,9 @@ const courseSchema = new mongoose.Schema({
         type: mongoose.SchemaTypes.String
     },
     name: {
+        type: mongoose.SchemaTypes.String
+    },
+    code: {
         type: mongoose.SchemaTypes.String
     }
 });
