@@ -24,7 +24,19 @@ const dictionary = {
     seria: 'series',
     Seria: 'series',
     cursuri: 'courses',
-    Cursuri: 'courses'
+    Cursuri: 'courses',
+    codProfesor: 'professor',
+    CodProfesor: 'professor',
+    codCurs: 'course',
+    CodCurs: 'course',
+    curs: 'courses',
+    Curs: 'courses',
+    seminar: 'seminars',
+    Seminar: 'seminars',
+    laborator: 'laboratories',
+    Laborator: 'laboratories',
+    practica: 'practices',
+    Practica: 'practices'
 };
 
 function transformStringToBoolean(str: string) {
@@ -36,6 +48,12 @@ function transformStringToBoolean(str: string) {
 }
 
 function transformStringToArray(str: string) {
+    if (str === "") {
+        return [];
+    }
+    else if (str.split(";").length == 0) {
+        return [str];
+    }
     return str.split(";").map(x => x.trim());
 }
 
@@ -64,7 +82,7 @@ export async function parseGroupCSV(csv: string) {
             year: 'number',
             series: 'number',
             numberOfStudents: 'number',
-            courses: transformStringToArray
+            // courses: transformStringToArray
         }
     }).fromString(csv);
 
@@ -75,6 +93,21 @@ export async function parseProfessorCSV(csv: string) {
     csv = csv.replace(/\b(?:Nume|nume|Cod|cod)/gi, x => dictionary[x]);
 
     const result = await csvParser().fromString(csv);
+
+    return result;
+}
+
+export async function parseProfessorGroupCSV(csv: string) {
+    csv = csv.replace(/\b(?:codProfesor|CodProfesor|codCurs|CodCurs|curs|Curs|seminar|Seminar|laborator|Laborator|practica|Practica)/gi, x => dictionary[x]);
+
+    const result = await csvParser({
+        colParser: {
+            courses: transformStringToArray,
+            seminars: transformStringToArray,
+            laboratories: transformStringToArray,
+            practices: transformStringToArray
+        }
+    }).fromString(csv);
 
     return result;
 }

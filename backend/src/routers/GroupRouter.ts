@@ -45,13 +45,13 @@ router.post("/groups", upload.single("file"), async (req, res) => {
         await Group.deleteMany({});
 
         for await (const group of groups) {
-            const matchedCourses = await Course.find({
-                code: {
-                    $in: group.courses
-                }
-            });
+            // const matchedCourses = await Course.find({
+            //     code: {
+            //         $in: group.courses
+            //     }
+            // });
 
-            group.courses = matchedCourses.map(x => x._id);
+            // group.courses = matchedCourses.map(x => x._id);
             await new Group(group).save();
         }
 

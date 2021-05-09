@@ -1,5 +1,5 @@
 import express from "express";
-import dotenv, { parse } from "dotenv";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -11,6 +11,8 @@ import QuizRouter from "./routers/QuizRouter";
 import CourseRouter from "./routers/CourseRouter";
 import GroupRouter from "./routers/GroupRouter";
 import ProfessorRouter from "./routers/ProfessorRouter";
+import ProfessorGroupRouter from "./routers/ProfessorGroupRouter";
+import { ProfessorGroup } from "./models/ProfessorGroup.model";
 
 const app = express();
 
@@ -24,6 +26,7 @@ app.use(QuizRouter);
 app.use(CourseRouter);
 app.use(GroupRouter);
 app.use(ProfessorRouter);
+app.use(ProfessorGroupRouter);
 
 app.listen(process.env.BACKEND_PORT, async () => {
     if (!process.env.MONGO_DB_URL) {

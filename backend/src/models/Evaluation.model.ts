@@ -2,11 +2,12 @@ import mongoose from "mongoose";
 
 import { ICourse } from "./Course.model";
 import { IProfessor } from "./Professor.model";
+import { CourseType } from "./ProfessorGroup.model";
 
 interface IEvaluation extends mongoose.Document {
     course: string | ICourse;
     professor: string | IProfessor;
-    series: number;
+    type: CourseType;
 }
 
 const evaluationSchema = new mongoose.Schema({
@@ -18,7 +19,7 @@ const evaluationSchema = new mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'Professor'
     },
-    series: {
+    type: {
         type: mongoose.SchemaTypes.Number
     }
 });
