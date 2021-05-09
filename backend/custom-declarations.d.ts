@@ -1,3 +1,4 @@
+import { IToken } from './src/models/Token.model';
 import { IUser } from './src/models/User.model';
 
 declare global {
@@ -5,6 +6,7 @@ declare global {
         interface Request {
             user?: IUser;
             token?: Object;
+            studentToken?: IToken;
         }
     }
 
