@@ -70,3 +70,11 @@ export async function parseGroupCSV(csv: string) {
 
     return result;
 }
+
+export async function parseProfessorCSV(csv: string) {
+    csv = csv.replace(/\b(?:Nume|nume|Cod|cod)/gi, x => dictionary[x]);
+
+    const result = await csvParser().fromString(csv);
+
+    return result;
+}

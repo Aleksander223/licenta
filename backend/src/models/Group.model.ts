@@ -2,14 +2,6 @@ import mongoose from "mongoose";
 import { ICourse } from "./Course.model";
 import { IProfessor } from "./Professor.model";
 
-interface StudyGroup {
-    course: string | ICourse;
-    courseProfessor: string | IProfessor;
-    laboratoryProfessor?: string | IProfessor;
-    practiceProfessor?: string | IProfessor;
-    seminarProfessor?: string | IProfessor;
-};
-
 interface IGroup extends mongoose.Document {
     name: string;
     numberOfStudents: number;

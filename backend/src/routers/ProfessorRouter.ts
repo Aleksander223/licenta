@@ -4,9 +4,8 @@ const router = express.Router();
 
 import path from "path";
 import multer from "multer";
-import { parseGroupCSV } from "../services/parseCSV";
-import { Group } from "../models/Group.model";
-import { Course } from "../models/Course.model";
+import { parseProfessorCSV } from "../services/parseCSV";
+import { Professor } from "../models/Professor.model";
 
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -23,36 +22,29 @@ const upload = multer({
     }
 });
 
-router.get("/groups", async (req, res) => {
+router.get("/professors", async (req, res) => {
     try {
-        const groups = await Group.find();
+        const professors = await Professor.find();
 
         return res.status(200).send({
-            groups
+            professors
         });
     } catch (error) {
         console.log(error);
         return res.status(500).send({
             error
-        });
+        });  
     }
 });
 
-router.post("/groups", upload.single("file"), async (req, res) => {
+router.post("/professors", upload.single("file"), async (req, res) => {
     try {
-        const groups = await parseGroupCSV(req.file.buffer.toString());
+        const professors = await parseProfessorCSV(req.file.buffer.toString());
 
-        await Group.deleteMany({});
+        await Professor.deleteMany({});
 
-        for await (const group of groups) {
-            const matchedCourses = await Course.find({
-                code: {
-                    $in: group.courses
-                }
-            });
-
-            group.courses = matchedCourses.map(x => x._id);
-            await new Group(group).save();
+        for await (const professor of professors) {
+            await new Professor(professor).save();
         }
 
         return res.status(201).send();
@@ -64,17 +56,17 @@ router.post("/groups", upload.single("file"), async (req, res) => {
     }
 });
 
-router.put("/group/:id", async(req, res) => {
+router.put("/professor/:id", async(req, res) => {
     try {
-        const group = await Group.findByIdAndUpdate(req.params.id, req.body);
+        const professor = await Professor.findByIdAndUpdate(req.params.id, req.body);
 
-        if (!group) {
+        if (!professor) {
             return res.status(404).send({
-                error: "Group not found"
+                error: "Professor not found"
             });
         }
-        await group.save();
-        return res.status(200).send(group);
+        await professor.save();
+        return res.status(200).send(professor);
     } catch (error) {
         console.log(error);
         return res.status(500).send({
@@ -83,9 +75,9 @@ router.put("/group/:id", async(req, res) => {
     } 
 });
 
-router.delete("/group/:id", async (req, res) => {
+router.delete("/professor/:id", async (req, res) => {
     try {
-        await Group.findByIdAndDelete(req.params.id);
+        await Professor.findByIdAndDelete(req.params.id);
 
         return res.status(200).send();
     } catch (error) {

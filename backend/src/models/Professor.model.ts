@@ -4,6 +4,7 @@ import { IUser } from "./User.model";
 interface IProfessor extends mongoose.Document {
     name: string;
     userProfile?: string | IUser;
+    code: string;
 }
 
 const professorSchema = new mongoose.Schema({
@@ -13,6 +14,9 @@ const professorSchema = new mongoose.Schema({
     userProfile: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'User'
+    },
+    code: {
+        type: mongoose.SchemaTypes.String
     }
 });
 
