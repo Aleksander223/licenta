@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import { Container, Card, Form, Button, InputGroup } from "react-bootstrap";
 import { FaKey, FaSignInAlt, FaBackspace } from "react-icons/fa";
+import axios from "axios";
 
 export default function TokenLogin() {
   const [token, setToken] = useState("");
@@ -11,6 +12,21 @@ export default function TokenLogin() {
 
   const resetToken = (e) => {
       setToken("");
+  }
+
+  const submitToken = (e) => {
+    if (token != "") {
+      e.preventDefault();
+
+      axios.post("http://127.0.0.1:5000/login/token", {
+        token
+      }).then(r => {
+        window.sessionStorage.setItem("auth", r.data.token);
+        window.location.href="/evaluate";
+      }).catch(e => {
+        alert("Invalid token");
+      });
+    }
   }
 
   return (
@@ -41,7 +57,7 @@ export default function TokenLogin() {
                 </InputGroup.Append>
               </InputGroup>
             </Form.Group>
-            <Button variant="primary" type="submit" className="my-4 px-4">
+            <Button variant="primary" type="submit" className="my-4 px-4" onClick={submitToken}>
                 <FaSignInAlt /> Login
             </Button>
           </Form>

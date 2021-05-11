@@ -1,8 +1,38 @@
-import React from "react";
+import React, {useState} from "react";
 import { Container, Card, Form, Button, InputGroup } from "react-bootstrap";
 import { FaEnvelope, FaLock, FaSignInAlt } from "react-icons/fa";
 
+import axios from "axios";
+
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+ 
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+  }
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+  }
+
+  const submitLogin = (e) => {
+    if (email != "" && password != "") {
+      e.preventDefault();
+      
+      axios.post("http://localhost:5000/login", {
+        email,
+        password
+      }).then(r => {
+        window.sessionStorage.setItem("auth", r.data.token);
+        window.location.href="/admin";
+      }).catch(e => {
+        console.log(e);
+        alert("Invalid email or password");
+      })
+    }
+  }
+
   return (
     <Container>
       <Card
@@ -22,7 +52,7 @@ export default function Login() {
                 <InputGroup.Prepend>
                   <InputGroup.Text><FaEnvelope/>&nbsp;</InputGroup.Text>
                 </InputGroup.Prepend>
-                <Form.Control type="email" placeholder="Email" />
+                <Form.Control type="email" placeholder="Email" value={email} onChange={handleEmail} required />
               </InputGroup>
             </Form.Group>
 
@@ -34,10 +64,10 @@ export default function Login() {
                 <InputGroup.Prepend>
                   <InputGroup.Text><FaLock/>&nbsp;</InputGroup.Text>
                 </InputGroup.Prepend>
-                <Form.Control type="password" placeholder="Password" />
+                <Form.Control type="password" placeholder="Password" value={password} onChange={handlePassword} required />
               </InputGroup>
             </Form.Group>
-            <Button variant="primary" type="submit" className="my-4 px-4">
+            <Button variant="primary" type="submit" onClick={submitLogin} className="my-4 px-4">
                 <FaSignInAlt /> Login
             </Button>
           </Form>

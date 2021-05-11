@@ -4,6 +4,7 @@ import Aside from "./components/Aside";
 import Login from "./components/Login";
 import MenuBar from "./components/MenuBar";
 import TokenLogin from "./components/TokenLogin";
+import Evaluations from "./pages/Evaluations";
 
 import Homepage from "./pages/Homepage";
 import Tokens from "./pages/Tokens";
@@ -22,6 +23,7 @@ function App() {
         <Route exact path="/admin" component={Homepage}></Route>
         <Route exact path="/tokens" component={Tokens}></Route>
         <Route exact path="/upload" component={Upload}></Route>
+        <Route exact path="/evaluate" component={Evaluations}></Route>
       </Switch>
     </BrowserRouter>
     </>

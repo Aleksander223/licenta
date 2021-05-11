@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 
 dotenv.config();
 
@@ -15,6 +16,12 @@ import ProfessorGroupRouter from "./routers/ProfessorGroupRouter";
 import TokenRouter from "./routers/TokenRouter";
 
 const app = express();
+
+// cors
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true
+}));
 
 // middlewares
 app.use(express.json());
