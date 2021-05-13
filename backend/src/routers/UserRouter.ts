@@ -6,6 +6,8 @@ import { verifyUser } from "../middlewares/auth";
 
 const router = express.Router();
 
+
+
 router.post("/user", async (req, res) => {
     try {
         if (!req.body.root_password) {

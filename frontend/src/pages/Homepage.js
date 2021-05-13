@@ -44,9 +44,7 @@ export default function Homepage() {
         }}
       >
         <Row>
-          <Col className="col-md-4 col-sm-4 col-lg-2">
             <Aside />
-          </Col>
           <Col className="col-md-8 col-sm-8" style={{}}>
             <Row>
               <Col>

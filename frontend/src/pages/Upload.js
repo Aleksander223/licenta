@@ -1,84 +1,39 @@
-import React, {useMemo} from "react";
+import React, {useState, useEffect} from "react";
 import { Form, Container, Row, Col } from "react-bootstrap";
+import 'react-dropzone-uploader/dist/styles.css'
+import Dropzone from 'react-dropzone-uploader'
 
 import Aside from "../components/Aside";
 
-import { useDropzone } from "react-dropzone";
-import styled from "styled-components";
-
-const getColor = (props) => {
-  if (props.isDragAccept) {
-    return "#00e676";
-  }
-  if (props.isDragReject) {
-    return "#ff1744";
-  }
-  if (props.isDragActive) {
-    return "#2196f3";
-  }
-  return "#eeeeee";
-};
-
-const baseStyle = {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: '20px',
-    borderWidth: 2,
-    borderRadius: 2,
-    borderColor: '#eeeeee',
-    borderStyle: 'dashed',
-    backgroundColor: '#fafafa',
-    color: '#bdbdbd',
-    outline: 'none',
-    transition: 'border .24s ease-in-out'
-  };
-  
-  const activeStyle = {
-    borderColor: '#2196f3'
-  };
-  
-  const acceptStyle = {
-    borderColor: '#00e676'
-  };
-  
-  const rejectStyle = {
-    borderColor: '#ff1744'
-  };
-
 export default function Upload() {
-  const {
-    getRootProps,
-    getInputProps,
-    isDragActive,
-    isDragAccept,
-    isDragReject,
-  } = useDropzone({ accept: ".pdf" });
+  // specify upload params and url for your files
+  const getUploadParams = ({ meta }) => { return { url: 'https://httpbin.org/post' } }
 
-  const style = useMemo(() => ({
-    ...baseStyle,
-    ...(isDragActive ? activeStyle : {}),
-    ...(isDragAccept ? acceptStyle : {}),
-    ...(isDragReject ? rejectStyle : {})
-  }), [
-    isDragActive,
-    isDragReject,
-    isDragAccept
-  ]);
+
+  const handleSubmit = (files, allFiles) => {
+    allFiles.forEach(f => f.remove())
+  }
 
   return (
     <>
       <Container fluid style={{}}>
         <Row>
-          <Col className="col-md-4 col-sm-4 col-lg-2">
             <Aside />
-          </Col>
           <Col className="col-md-8 col-sm-8" style={{}}>
-          <div {...getRootProps({style})}>
-        <input {...getInputProps()} />
-        <p>Upload files</p>
-      </div>
+          <Dropzone
+      styles={{
+        dropzone: {
+          overflowX: "hidden",
+          overflowY: "hidden"
+        }
+      }}
+      getUploadParams={getUploadParams}
+      onSubmit={handleSubmit}
+      multiple={false}
+      maxSizeBytes={2 * 1024 * 1024}
+      maxFiles={1}
+      SubmitButtonComponent={null}
+    />
           </Col>
         </Row>
       </Container>
