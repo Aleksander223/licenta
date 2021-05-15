@@ -11,7 +11,6 @@ export default function Homepage() {
   const today = new Date();
 
   for (let i = 0; i < 14; i++) {
-    console.log(today);
     const day = today.getDate();
     const month = today.getMonth() + 1;
 

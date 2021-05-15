@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext} from "react";
 
 import { Navigation } from "react-minimal-side-navigation";
 import "react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css";
@@ -9,18 +9,28 @@ import { FaHome, FaDatabase, FaKey, FaBars } from "react-icons/fa";
 import { Container, Col, Row, Card, Button, Collapse  } from "react-bootstrap";
 
 import { useWindowDimensions } from "../services/util";
+import { AppContext } from "../services/context";
  
 export default function Aside(props) {
     let history = useHistory();
 
     const {height, width} = useWindowDimensions();
-    const [open, setOpen] = useState(false);
+
+    const context = useContext(AppContext);
+
+    let asideOpen = null;
+
+    if (width > 576) {
+        asideOpen = true;
+    } else if (width < 576) {
+        asideOpen = context.aside;
+    }
 
     return (
         <>
             {
-              width > 576 && 
-            <Col className="col-md-3 col-sm-4 col-lg-2">
+               asideOpen && 
+            <Col className="col-xs-1 col-sm-1 col-md-3 col-sm-4 col-lg-2">
             <div
                 style={{
                     height: "94vh",

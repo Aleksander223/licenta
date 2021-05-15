@@ -72,17 +72,17 @@ export async function verifyUser(req: express.Request, res: express.Response, ne
 }
 
 export async function verifyAdmin(req: express.Request, res: express.Response, next: express.NextFunction) {
-    if (req.user!.role == 0) {
-        next();
+    if (req.user.role != 0) {
+        return res.status(403).send({error: 'Unauthorized'});
     }
 
-    return res.status(403).send({error: 'Unauthorized'});
-}
+    next();
+}   
 
 export async function verifyProfessor(req: express.Request, res: express.Response, next: express.NextFunction) {
-    if (req.user!.role == 1) {
-        next();
+    if (req.user.role != 1) {
+        return res.status(403).send({error: 'Unauthorized'});
     }
 
-    return res.status(403).send({error: 'Unauthorized'});
+    next();
 }

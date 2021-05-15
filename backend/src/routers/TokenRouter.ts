@@ -7,8 +7,10 @@ import { Token } from "../models/Token.model";
 
 const router = express.Router();
 
-router.post("/tokens/generate", [/*verifyUser, verifyAdmin*/], async (req, res) => {
+router.post("/tokens/generate", [verifyUser, verifyAdmin], async (req, res) => {
     try {
+        await Token.deleteMany({});
+
         const groups = await Group.find();
 
         const tokens = [];
@@ -25,7 +27,8 @@ router.post("/tokens/generate", [/*verifyUser, verifyAdmin*/], async (req, res) 
 
             for (let j = 0; j < groups[i].numberOfStudents; j++) {
                 const token = new Token({
-                    unsentEvaluations: evaluations
+                    unsentEvaluations: evaluations,
+                    group: groups[i]._id
                 });
 
                 await token.save();
@@ -38,6 +41,22 @@ router.post("/tokens/generate", [/*verifyUser, verifyAdmin*/], async (req, res) 
             tokens
         });
         
+    } catch (error) {
+        return res.status(500).send({
+            error
+        });
+    }
+});
+
+router.get("/tokens", [verifyUser, verifyAdmin], async (req, res) => {
+    try {
+        const tokens = await Token.find().populate({
+            path: "group"
+        });
+
+        return res.status(200).send({
+            tokens
+        });
     } catch (error) {
         return res.status(500).send({
             error

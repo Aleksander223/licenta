@@ -9,11 +9,19 @@ import Evaluations from "./pages/Evaluations";
 import Homepage from "./pages/Homepage";
 import Tokens from "./pages/Tokens";
 import Upload from "./pages/Upload";
+import { AppContext } from "./services/context";
 import { isLoggedIn } from "./services/util";
 
+import {useState} from "react";
+
 function App() {
+  const [aside, setAside] = useState(true);
+
   return (
-    <>
+    <AppContext.Provider value={{
+      aside,
+      setAside
+    }}>
     <MenuBar />
     <br/>
     <br/>
@@ -28,7 +36,7 @@ function App() {
         <Route component={() => <Redirect to="/"/>}></Route>
       </Switch>
     </BrowserRouter>
-    </>
+    </AppContext.Provider>
   );
 }
 
