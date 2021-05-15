@@ -59,4 +59,29 @@ router.post("/professorgroups", upload.single("file"), async (req, res) => {
     }
 });
 
+router.get("/timetable", async (req, res) => {
+    try {
+        const professorGroups = await ProfessorGroup.find().populate([
+            {
+                path: 'professor'
+            },
+            {
+                path: 'course'
+            },
+            {
+                path: 'group'
+            }
+        ]);
+
+        return res.status(200).send({
+            timetable: professorGroups
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            error
+        });
+    }
+});
+
 export default router;

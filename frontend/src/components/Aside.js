@@ -40,7 +40,6 @@ export default function Aside(props) {
                 }}
             >
                 <Navigation
-                    activeItemId="/admin"
                     onSelect={({ itemId }) => {
                         if (itemId != "") {
                             history.push(itemId);

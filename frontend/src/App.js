@@ -13,6 +13,10 @@ import { AppContext } from "./services/context";
 import { isLoggedIn } from "./services/util";
 
 import {useState} from "react";
+import Professors from "./pages/Professors";
+import Groups from "./pages/Groups";
+import Courses from "./pages/Courses";
+import Timetable from "./pages/Timetable";
 
 function App() {
   const [aside, setAside] = useState(true);
@@ -31,7 +35,11 @@ function App() {
         <Route exact path="/" component={TokenLogin}></Route>
         {isLoggedIn() == 2 && <Route exact path="/admin" component={Homepage}></Route>}
         <Route exact path="/tokens" component={Tokens}></Route>
+        <Route exact path="/professors" component={Professors}></Route>
+        <Route exact path="/courses" component={Courses}></Route>
+        <Route exact path="/groups" component={Groups}></Route>
         <Route exact path="/upload" component={Upload}></Route>
+        <Route exact path="/timetable" component={Timetable}></Route>
         {isLoggedIn() == 1 && <Route exact path="/evaluate" component={Evaluations}></Route>}
         <Route component={() => <Redirect to="/"/>}></Route>
       </Switch>
