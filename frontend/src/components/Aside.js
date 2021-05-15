@@ -5,7 +5,7 @@ import "react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css";
 
 import { useHistory } from "react-router-dom";
 
-import { FaHome, FaDatabase, FaKey, FaBars } from "react-icons/fa";
+import { FaHome, FaDatabase, FaKey, FaBars, FaUpload } from "react-icons/fa";
 import { Container, Col, Row, Card, Button, Collapse  } from "react-bootstrap";
 
 import { useWindowDimensions } from "../services/util";
@@ -52,31 +52,36 @@ export default function Aside(props) {
                             elemBefore: () => <FaHome />,
                         },
                         {
+                            title: "Import data",
+                            itemId: "/upload",
+                            elemBefore: () => <FaUpload />
+                        },
+                        {
                             title: "Data",
                             itemId: "",
                             elemBefore: () => <FaDatabase />,
                             subNav: [
                                 {
                                     title: "Courses",
-                                    itemId: "/admin/data/add",
+                                    itemId: "/courses",
                                 },
                                 {
                                     title: "Professors",
-                                    itemId: "/admin/data/edit",
+                                    itemId: "/professors",
                                 },
                                 {
                                     title: "Groups",
-                                    itemId: "/admin/data/edit",
+                                    itemId: "/groups",
                                 },
                                 {
                                     title: "Timetable",
-                                    itemId: "/admin/data/edit",
+                                    itemId: "/timetable",
                                 },
                             ],
                         },
                         {
                             title: "Tokens",
-                            itemId: "/admin/tokens",
+                            itemId: "/tokens",
                             elemBefore: () => <FaKey />,
                         },
                     ]}
