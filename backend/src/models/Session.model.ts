@@ -7,7 +7,8 @@ interface ISession extends mongoose.Document {
     endDate: Date;
     finalYear: boolean;
     semester: number;
-    quiz: string | IQuiz
+    quiz: string | IQuiz;
+    active: boolean;
 };
 
 const sessionSchema = new mongoose.Schema({
@@ -28,6 +29,13 @@ const sessionSchema = new mongoose.Schema({
         ref: 'Quiz'
     }
 });
+
+sessionSchema.virtual('active').get(() => {
+    const currentDate = new Date();
+
+    // @ts-ignore
+    return this.startDate < currentDate && currentDate < this.endDate;
+})
 
 const Session = mongoose.model<ISession>("Session", sessionSchema);
 

@@ -14,6 +14,7 @@ import GroupRouter from "./routers/GroupRouter";
 import ProfessorRouter from "./routers/ProfessorRouter";
 import ProfessorGroupRouter from "./routers/ProfessorGroupRouter";
 import TokenRouter from "./routers/TokenRouter";
+import SessionRouter from "./routers/SessionRouter";
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use(GroupRouter);
 app.use(ProfessorRouter);
 app.use(ProfessorGroupRouter);
 app.use(TokenRouter);
+app.use(SessionRouter);
 
 app.listen(process.env.BACKEND_PORT, async () => {
     if (!process.env.MONGO_DB_URL) {
