@@ -37,14 +37,14 @@ const userSchema = new mongoose.Schema({
 // hash password before saving it
 // @ts-ignore
 userSchema.pre<IUser>('save', function (next: any, err: any) {
-    // @ts-ignore
+    
     if (this.isNew) {
-        // @ts-ignore
+        
         if (!validator.isStrongPassword(this.password)) {
             throw new Error('Password not strong enough');
         }
 
-        // @ts-ignore
+        
         this.password = bcrypt.hashSync(this.password);
     } 
 

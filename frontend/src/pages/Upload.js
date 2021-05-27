@@ -1,25 +1,38 @@
 import React, {useState, useEffect} from "react";
-import { Form, Container, Row, Col } from "react-bootstrap";
+import { Form, Container, Row, Col, Button } from "react-bootstrap";
 import 'react-dropzone-uploader/dist/styles.css'
 import Dropzone from 'react-dropzone-uploader'
 
 import Aside from "../components/Aside";
 
-export default function Upload() {
-  // specify upload params and url for your files
-  const getUploadParams = ({ meta }) => { return { url: 'https://httpbin.org/post' } }
-
+export default function Upload(props) {
+  const getUploadParams = ({ meta }) => { 
+    return { url: props.url } 
+  }
 
   const handleSubmit = (files, allFiles) => {
-    allFiles.forEach(f => f.remove())
+    allFiles.forEach(f => {
+      f.restart();
+      f.remove();
+    })
+  }
+
+  const handleChangeStatus = (file, status) => {
+    if (status == 'ready') {
+      file.meta.status="done";
+      status = "done";
+    }
+  }
+
+  const validate = (file) => {
+    const ext = file.meta.name.split('.').pop();
+
+    if (ext !== 'csv') {
+      return "File format not accepted!";
+    }
   }
 
   return (
-    <>
-      <Container fluid style={{}}>
-        <Row>
-            <Aside />
-          <Col className="col-md-8 col-sm-8" style={{}}>
           <Dropzone
       styles={{
         dropzone: {
@@ -32,11 +45,9 @@ export default function Upload() {
       multiple={false}
       maxSizeBytes={2 * 1024 * 1024}
       maxFiles={1}
-      SubmitButtonComponent={null}
+      autoUpload={false}
+      onChangeStatus = {handleChangeStatus}
+      validate={validate}
     />
-          </Col>
-        </Row>
-      </Container>
-    </>
   );
 }
