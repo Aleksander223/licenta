@@ -48,6 +48,7 @@ app.listen(process.env.BACKEND_PORT, async () => {
         useUnifiedTopology: true,
         useCreateIndex: true,
         useNewUrlParser: true,
+        useFindAndModify: true
     });
 
     console.log('Sucesfully connected to MongoDB');

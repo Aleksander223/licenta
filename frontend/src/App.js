@@ -8,7 +8,7 @@ import Evaluations from "./pages/Evaluations";
 
 import Homepage from "./pages/Homepage";
 import Tokens from "./pages/Tokens";
-import Upload from "./pages/Upload";
+import SessionView from "./pages/SessionView";
 import { AppContext } from "./services/context";
 import { isLoggedIn } from "./services/util";
 
@@ -39,9 +39,9 @@ function App() {
         <Route exact path="/professors" component={Professors}></Route>
         <Route exact path="/courses" component={Courses}></Route>
         <Route exact path="/groups" component={Groups}></Route>
-        <Route exact path="/upload" component={Upload}></Route>
         <Route exact path="/timetable" component={Timetable}></Route>
         <Route exact path="/session" component={Session}></Route>
+        <Route eaxact path="/session/view" component={SessionView}></Route>
         {isLoggedIn() == 1 && <Route exact path="/evaluate" component={Evaluations}></Route>}
         <Route component={() => <Redirect to="/"/>}></Route>
       </Switch>

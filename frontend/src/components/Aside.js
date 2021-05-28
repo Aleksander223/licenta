@@ -53,8 +53,18 @@ export default function Aside(props) {
                         },
                         {
                             title: "Session",
-                            itemId: "/session",
-                            elemBefore: () => <FaCalendarCheck />
+                            itemId: "",
+                            elemBefore: () => <FaCalendarCheck />,
+                            subNav: [
+                                {
+                                    title: "Create",
+                                    itemId: "/session",
+                                },
+                                {
+                                    title: "View",
+                                    itemId: "/session/view",
+                                }
+                            ]
                         },
                         {
                             title: "Data",

@@ -4,6 +4,7 @@ import { verifyAdmin, verifyUser } from "../middlewares/auth";
 import { Group } from "../models/Group.model";
 import { ProfessorGroup } from "../models/ProfessorGroup.model";
 import { Token } from "../models/Token.model";
+import { Session } from "../models/Session.model";
 
 const router = express.Router();
 
@@ -11,7 +12,17 @@ router.post("/tokens/generate", [verifyUser, verifyAdmin], async (req, res) => {
     try {
         await Token.deleteMany({});
 
-        const groups = await Group.find();
+        const session = await Session.findOne({}, null, {
+            sort: {
+                $natural: -1
+            }
+        });
+
+        const finalYear = session.finalYear ? true : false;
+
+        const groups = await Group.find({
+            finalYear
+        });
 
         const tokens = [];
 

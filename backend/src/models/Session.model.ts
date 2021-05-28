@@ -11,6 +11,7 @@ interface ISession extends mongoose.Document {
     laboratoryQuiz: string | IQuiz;
     seminarQuiz: string | IQuiz;
     practiceQuiz: string | IQuiz;
+    name: string;
     active: boolean;
 };
 
@@ -42,13 +43,16 @@ const sessionSchema = new mongoose.Schema({
     practiceQuiz: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'Quiz'
+    },
+    name: {
+        type: mongoose.SchemaTypes.String
     }
 });
 
-sessionSchema.virtual('active').get(() => {
+sessionSchema.virtual('active').get(function() {
     const currentDate = new Date();
 
-    // @ts-ignore
+
     return this.startDate < currentDate && currentDate < this.endDate;
 })
 
