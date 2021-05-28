@@ -7,7 +7,10 @@ interface ISession extends mongoose.Document {
     endDate: Date;
     finalYear: boolean;
     semester: number;
-    quiz: string | IQuiz;
+    courseQuiz: string | IQuiz;
+    laboratoryQuiz: string | IQuiz;
+    seminarQuiz: string | IQuiz;
+    practiceQuiz: string | IQuiz;
     active: boolean;
 };
 
@@ -24,7 +27,19 @@ const sessionSchema = new mongoose.Schema({
     semester: {
         type: mongoose.SchemaTypes.Number
     },
-    quiz: {
+    courseQuiz: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'Quiz'
+    },
+    laboratoryQuiz: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'Quiz'
+    },
+    seminarQuiz: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'Quiz'
+    },
+    practiceQuiz: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'Quiz'
     }

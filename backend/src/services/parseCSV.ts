@@ -36,7 +36,9 @@ const dictionary = {
     laborator: 'laboratories',
     Laborator: 'laboratories',
     practica: 'practices',
-    Practica: 'practices'
+    Practica: 'practices',
+    anFinal: 'finalYear',
+    AnFinal: 'finalYear'
 };
 
 function transformStringToBoolean(str: string) {
@@ -75,14 +77,14 @@ export async function parseCourseCSV(csv: string) {
 }
 
 export async function parseGroupCSV(csv: string) {
-    csv = csv.replace(/\b(?:An|an|numarStudenti|NumarStudenti|seria|Seria|cursuri|Cursuri|nume|Nume)/gi, x => dictionary[x]);
+    csv = csv.replace(/\b(?:anFinal|AnFinal|An|an|numarStudenti|NumarStudenti|seria|Seria|cursuri|Cursuri|nume|Nume)/gi, x => dictionary[x]);
 
     const result = await csvParser({
         colParser: {
             year: 'number',
             series: 'number',
             numberOfStudents: 'number',
-            // courses: transformStringToArray
+            finalYear: transformStringToBoolean
         }
     }).fromString(csv);
 

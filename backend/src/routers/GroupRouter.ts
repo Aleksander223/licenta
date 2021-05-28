@@ -52,6 +52,7 @@ router.post("/groups", upload.single("file"), async (req, res) => {
             // });
 
             // group.courses = matchedCourses.map(x => x._id);
+            console.log(group);
             await new Group(group).save();
         }
 

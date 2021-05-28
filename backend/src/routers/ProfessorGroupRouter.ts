@@ -25,7 +25,7 @@ const upload = multer({
     }
 });
 
-router.post("/professorgroups", upload.single("file"), async (req, res) => {
+router.post("/timetable", upload.single("file"), async (req, res) => {
     try {
         const professorGroups = await parseProfessorGroupCSV(req.file.buffer.toString());
 

@@ -8,6 +8,7 @@ interface IGroup extends mongoose.Document {
     series: string;
     year: number;
     studyFormation: string;
+    finalYear: boolean;
 }
 
 const groupSchema = new mongoose.Schema({
@@ -22,6 +23,9 @@ const groupSchema = new mongoose.Schema({
     },
     year: {
         type: mongoose.SchemaTypes.Number
+    },
+    finalYear: {
+        type: mongoose.SchemaTypes.Boolean
     }
 });
 
