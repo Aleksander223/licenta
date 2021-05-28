@@ -12,13 +12,15 @@ export default function Upload(props) {
 
   const handleSubmit = (files, allFiles) => {
     allFiles.forEach(f => {
-      f.restart();
+      if (!props.autoUpload) {
+        f.restart();
+      }
       f.remove();
     })
   }
 
   const handleChangeStatus = (file, status) => {
-    if (status == 'ready') {
+    if (!props.autoUpload && status == 'ready') {
       file.meta.status="done";
       status = "done";
     }
@@ -27,7 +29,7 @@ export default function Upload(props) {
   const validate = (file) => {
     const ext = file.meta.name.split('.').pop();
 
-    if (ext !== 'csv') {
+    if (ext !== (props.fileType ?? 'csv')) {
       return "File format not accepted!";
     }
   }
@@ -42,10 +44,10 @@ export default function Upload(props) {
       }}
       getUploadParams={getUploadParams}
       onSubmit={handleSubmit}
-      multiple={false}
+      multiple={props.multiple ?? false}
       maxSizeBytes={2 * 1024 * 1024}
-      maxFiles={1}
-      autoUpload={false}
+      maxFiles={props.maxFiles ?? 1}
+      autoUpload={props.autoUpload ?? false}
       onChangeStatus = {handleChangeStatus}
       validate={validate}
     />

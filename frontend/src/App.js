@@ -17,6 +17,7 @@ import Professors from "./pages/Professors";
 import Groups from "./pages/Groups";
 import Courses from "./pages/Courses";
 import Timetable from "./pages/Timetable";
+import Session from "./pages/Session";
 
 function App() {
   const [aside, setAside] = useState(true);
@@ -40,6 +41,7 @@ function App() {
         <Route exact path="/groups" component={Groups}></Route>
         <Route exact path="/upload" component={Upload}></Route>
         <Route exact path="/timetable" component={Timetable}></Route>
+        <Route exact path="/session" component={Session}></Route>
         {isLoggedIn() == 1 && <Route exact path="/evaluate" component={Evaluations}></Route>}
         <Route component={() => <Redirect to="/"/>}></Route>
       </Switch>

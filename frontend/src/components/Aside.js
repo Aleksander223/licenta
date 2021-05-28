@@ -5,7 +5,7 @@ import "react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css";
 
 import { useHistory } from "react-router-dom";
 
-import { FaHome, FaDatabase, FaKey, FaBars, FaUpload } from "react-icons/fa";
+import { FaHome, FaDatabase, FaKey, FaBars, FaUpload, FaCalendarCheck } from "react-icons/fa";
 import { Container, Col, Row, Card, Button, Collapse  } from "react-bootstrap";
 
 import { useWindowDimensions } from "../services/util";
@@ -52,9 +52,9 @@ export default function Aside(props) {
                             elemBefore: () => <FaHome />,
                         },
                         {
-                            title: "Import data",
-                            itemId: "/upload",
-                            elemBefore: () => <FaUpload />
+                            title: "Session",
+                            itemId: "/session",
+                            elemBefore: () => <FaCalendarCheck />
                         },
                         {
                             title: "Data",
