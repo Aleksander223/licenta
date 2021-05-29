@@ -43,7 +43,7 @@ function App() {
         <Route exact path="/timetable" component={Timetable}></Route>
         <Route exact path="/session" component={Session}></Route>
         <Route exact path="/session/view" component={SessionView}></Route>
-        <Route exact path="/quiz" component={Quiz}></Route>
+        <Route path="/quiz/:course/:courseName/:professor/:professorName/:type" component={Quiz}></Route>
         {isLoggedIn() == 1 && <Route exact path="/evaluate" component={Evaluations}></Route>}
         <Route component={() => <Redirect to="/"/>}></Route>
       </Switch>

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 import { Container, Col, Row, Card, Button } from "react-bootstrap";
 
-import { transformTypeToName } from "../services/util";
+import { transformTypeToName, transformTypeToQuizName } from "../services/util";
 
 export default function Evaluations() {
     const [status, setStatus] = useState({
@@ -19,6 +19,7 @@ export default function Evaluations() {
             }
         }).then(r => {
             setStatus(r.data);
+            console.log(r.data);
         })
     }, []);
 
@@ -47,7 +48,7 @@ export default function Evaluations() {
                                             {x.professor.name} - {transformTypeToName(x.type)}
                                         </p>
                                     </Card.Text>
-                                    <Button href={`/evaluate/${x._id}`}>Start</Button>
+                                    <Button href={`/quiz/${x.course._id}/${x.course.name}/${x.professor._id}/${x.professor.name}/${transformTypeToQuizName(x.type)}`}>Start</Button>
                                 </Card>
                             </Col>
                         );

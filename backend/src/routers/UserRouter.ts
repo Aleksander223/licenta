@@ -2,7 +2,9 @@ import express from "express";
 
 import { User } from "../models/User.model";
 import { login } from "../services/login";
-import { verifyUser } from "../middlewares/auth";
+import { verifyAdmin, verifyUser } from "../middlewares/auth";
+import { Evaluation } from "../models/Evaluation.model";
+import { Session } from "../models/Session.model";
 
 const router = express.Router();
 
@@ -49,6 +51,103 @@ router.post("/login", async (req, res) => {
 router.get("/status", verifyUser, async (req, res) => {
     try {
         return res.status(200).send(req.user);
+    } catch (error) {
+        return res.status(500).send({
+            error
+        });
+    }
+});
+
+router.get("/evaluations/total", async (req, res) => {
+    try {
+        const session = await Session.findOne({}, null, {
+            sort: {
+                $natural: -1
+            }
+        });
+
+        if (!session.active) {
+            throw new Error("No session active");
+        }
+
+        const evaluations = await Evaluation.find();
+
+        return res.status(200).send({
+            noEvaluations: evaluations.length
+        });
+    } catch (error) {
+        return res.status(500).send({
+            error
+        });
+    }
+});
+
+router.get("/evaluations/latest", async (req, res) => {
+    try {
+        const session = await Session.findOne({}, null, {
+            sort: {
+                $natural: -1
+            }
+        });
+
+        if (!session.active) {
+            throw new Error("No session active");
+        }
+
+        const evaluations = await Evaluation.find({
+            createdAt: {
+                $gt: new Date(Date.now() - 86400000)
+            }
+        });
+        
+
+        return res.status(200).send({
+            noEvaluations: evaluations.length
+        });
+    } catch (error) {
+        return res.status(500).send({
+            error
+        });
+    }
+});
+
+router.get("/evaluations/bins", async (req, res) => {
+    try {
+        const session = await Session.findOne({}, null, {
+            sort: {
+                $natural: -1
+            }
+        });
+
+        if (!session.active) {
+            throw new Error("No session active");
+        }
+
+        // @ts-ignore
+        const dayOfYear = (date: Date) => Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+
+        const bins = [];
+
+        for (let i = dayOfYear(session.startDate); i < dayOfYear(session.endDate); i++) {
+            const now = new Date();
+
+            const leftLimit = new Date(now.getFullYear(), 0, i - 1, 0, 0, 0);
+            const rightLimit = new Date(now.getFullYear(), 0, i, 0, 0, 0);
+
+            const evaluations = await Evaluation.find({
+                createdAt: {
+                    $gte: leftLimit,
+                    $lt: rightLimit
+                }
+            });
+
+            bins.push(evaluations.length);
+        }
+
+        return res.status(200).send({
+            bins
+        });
+
     } catch (error) {
         return res.status(500).send({
             error

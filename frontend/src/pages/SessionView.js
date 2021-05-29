@@ -182,7 +182,7 @@ export default function SessionView() {
                   <Card.Body>
                     <Button className="mx-3 my-1" onClick={generateTokens}>Generare tokeni</Button>
                     <Button className="mx-3 my-1" variant="danger">
-                      Sterge sesiune
+                      Stop sesiune
                     </Button>
                   </Card.Body>
                 </Card>

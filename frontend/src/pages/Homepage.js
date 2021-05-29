@@ -1,107 +1,204 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
+import axios from "axios";
 
 import { Container, Col, Row, Card, Button } from "react-bootstrap";
-import Chart from 'react-apexcharts'
+import Chart from "react-apexcharts";
 
 import Aside from "../components/Aside";
 
+const days = [];
+
+const today = new Date();
+
+for (let i = 0; i < 14; i++) {
+  const day = today.getDate();
+  const month = today.getMonth() + 1;
+
+  days.push(`${day}/${month}`);
+
+  // next day
+  today.setDate(today.getDate() + 1);
+}
+
+const state = {
+  options: {
+    chart: {
+      id: "respondenti",
+    },
+    xaxis: {
+      categories: days,
+    },
+  },
+  series: [
+    {
+      name: "series-1",
+      data: [100, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    },
+  ],
+};
+
 export default function Homepage() {
-  const days = []
-
-  const today = new Date();
-
-  for (let i = 0; i < 14; i++) {
-    const day = today.getDate();
-    const month = today.getMonth() + 1;
-
-    days.push(`${day}/${month}`)
-
-    // next day
-    today.setDate(today.getDate() + 1);
-  }
-
-  const state = {
+  const [sessionActive, setSessionActive] = useState(false);
+  const [totalE, setTotalE] = useState(0);
+  const [latestE, setLatestE] = useState(0);
+  const [state, setState] = useState({
     options: {
       chart: {
-        id: 'apexchart-example'
+        id: "respondenti",
       },
       xaxis: {
-        categories: days
-      }
+        categories: [],
+      },
     },
-    series: [{
-      name: 'series-1',
-      data: [100, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    }]
-  }
+    series: [
+      {
+        name: "nr",
+        data: [],
+      },
+    ],
+  });
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:5000/evaluations/bins", {
+        headers: {
+          Authorization: window.sessionStorage.getItem("auth"),
+        },
+      })
+      .then((r) => {
+        const bins = r.data.bins;
+
+        axios
+          .get("http://127.0.0.1:5000/session/current", {
+            headers: {
+              Authorization: window.sessionStorage.getItem("auth"),
+            },
+          })
+          .then((r) => {
+            setSessionActive(true);
+
+            const startDate = new Date(r.data.startDate);
+            const endDate = new Date(r.data.endDate);
+
+            const days = [];
+
+            const today = startDate;
+
+            const itDays = Math.round(
+              (endDate - startDate) / (1000 * 60 * 60 * 24)
+            );
+
+            for (let i = 0; i < itDays; i++) {
+              const day = today.getDate();
+              const month = today.getMonth() + 1;
+
+              days.push(`${day}/${month}`);
+
+              // next day
+              today.setDate(today.getDate() + 1);
+            }
+
+            const st = {
+              options: {
+                chart: {
+                  id: "respondenti",
+                },
+                xaxis: {
+                  categories: days,
+                },
+              },
+              series: [
+                {
+                  name: "nr",
+                  data: bins,
+                },
+              ],
+            };
+
+            setState(st);
+          });
+      });
+
+      axios
+      .get("http://127.0.0.1:5000/evaluations/total", {
+        headers: {
+          Authorization: window.sessionStorage.getItem("auth"),
+        },
+      }).then((r) => {
+        setTotalE(r.data.noEvaluations);
+      });
+
+      axios
+      .get("http://127.0.0.1:5000/evaluations/latest", {
+        headers: {
+          Authorization: window.sessionStorage.getItem("auth"),
+        },
+      }).then((r) => {
+        setLatestE(r.data.noEvaluations);
+      });
+  }, []);
 
   return (
     <>
-      <Container
-        fluid
-        style={{
-        }}
-      >
+      <Container fluid style={{}}>
         <Row>
-            <Aside />
-          <Col className="col-md-8 col-sm-8" style={{}}>
-            <Row>
-              <Col>
-                <Card
-                  style={{
-                    background: "white",
-                    borderRadius: "8px",
-                    boxShadow: "-1px 8px 10px -15px black",
-                    padding: "15px",
-                  }}
-                >
-                  <Card.Title>Nici o sesiune de evaluare activă</Card.Title>
-                  <Card.Text>&nbsp;</Card.Text>
-                  <Card.Body>
-                    <Button className="mx-3 my-1">Start sesiune normală</Button>
-                    <Button className="mx-3 my-1">
-                      Start sesiune ani terminali
-                    </Button>
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row>
-
-            <Row className="mt-5 equal">
-              <Col className="">
-                <Card className="text-center"
-                  style={{
-                    background: "white",
-                    borderRadius: "8px",
-                    boxShadow: "-1px 8px 10px -15px black",
-                    padding: "15px",
-                  }}
-                >
-                  <Card.Title><h1 className="display-1">0</h1></Card.Title>
-                  <Card.Text><p className="lead">respondenți în ultimele 24h</p></Card.Text>
-                </Card>
-              </Col>
-              <Col className="">
-              <Card className="text-center"
-                  style={{
-                    background: "white",
-                    borderRadius: "8px",
-                    boxShadow: "-1px 8px 10px -15px black",
-                    padding: "15px",
-                  }}
-                >
-                  <Card.Title><h1 className="display-1">0</h1></Card.Title>
-                  <Card.Text><p className="lead">respondenți în total</p></Card.Text>
-                </Card>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-              <Chart options={state.options} series={state.series} type="bar" height="320px" className="mt-5" />
-              </Col>
-            </Row>
-
-          </Col>
+          <Aside />
+          {sessionActive ? (
+            <Col className="col-md-8 col-sm-8" style={{}}>
+              <Row className="mt-5 equal">
+                <Col className="">
+                  <Card
+                    className="text-center"
+                    style={{
+                      background: "white",
+                      borderRadius: "8px",
+                      boxShadow: "-1px 8px 10px -15px black",
+                      padding: "15px",
+                    }}
+                  >
+                    <Card.Title>
+                      <h1 className="display-1">{latestE}</h1>
+                    </Card.Title>
+                    <Card.Text>
+                      <p className="lead">respondenți în ultimele 24h</p>
+                    </Card.Text>
+                  </Card>
+                </Col>
+                <Col className="">
+                  <Card
+                    className="text-center"
+                    style={{
+                      background: "white",
+                      borderRadius: "8px",
+                      boxShadow: "-1px 8px 10px -15px black",
+                      padding: "15px",
+                    }}
+                  >
+                    <Card.Title>
+                      <h1 className="display-1">{totalE}</h1>
+                    </Card.Title>
+                    <Card.Text>
+                      <p className="lead">respondenți în total</p>
+                    </Card.Text>
+                  </Card>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Chart
+                    options={state.options}
+                    series={state.series}
+                    type="bar"
+                    height="320px"
+                    className="mt-5"
+                  />
+                </Col>
+              </Row>
+            </Col>
+          ) : (
+            <p className="display-3">Nici o sesiune activa</p>
+          )}
         </Row>
       </Container>
     </>

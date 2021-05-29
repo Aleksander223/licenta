@@ -41,6 +41,36 @@ export function transformTypeToName(type) {
     }
 }
 
+export function transformTypeToQuizName(type) {
+    switch (type) {
+        case 0:
+            return "courseQuiz";
+        case 1:
+            return "seminarQuiz";
+        case 2:
+            return "laboratoryQuiz";
+        case 3:
+            return "practiceQuiz";
+        default:
+            return "Undefined";
+    }
+}
+
+export function transformQuizNameToType(quiz) {
+    switch (quiz) {
+        case "courseQuiz":
+            return 0;
+        case "seminarQuiz":
+            return 1;
+        case "laboratoryQuiz":
+            return 2;
+        case "practiceQuiz":
+            return 3;
+        default:
+            return -1;
+    }
+}
+
 export function isLoggedIn() {
     const token = window.sessionStorage.getItem("auth");
 
