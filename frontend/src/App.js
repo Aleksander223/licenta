@@ -9,6 +9,7 @@ import Evaluations from "./pages/Evaluations";
 import Homepage from "./pages/Homepage";
 import Tokens from "./pages/Tokens";
 import SessionView from "./pages/SessionView";
+import Quiz from "./pages/Quiz";
 import { AppContext } from "./services/context";
 import { isLoggedIn } from "./services/util";
 
@@ -41,7 +42,8 @@ function App() {
         <Route exact path="/groups" component={Groups}></Route>
         <Route exact path="/timetable" component={Timetable}></Route>
         <Route exact path="/session" component={Session}></Route>
-        <Route eaxact path="/session/view" component={SessionView}></Route>
+        <Route exact path="/session/view" component={SessionView}></Route>
+        <Route exact path="/quiz" component={Quiz}></Route>
         {isLoggedIn() == 1 && <Route exact path="/evaluate" component={Evaluations}></Route>}
         <Route component={() => <Redirect to="/"/>}></Route>
       </Switch>

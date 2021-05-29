@@ -20,11 +20,13 @@ export default function Upload(props) {
       if (!props.autoUpload) {
         f.restart();
       }
+      if (props.getFileIds) {
+        ids.push({
+          "_id": JSON.parse(f.xhr.response)._id,
+          "name": f.meta.name
+      });
+      }
       
-      ids.push({
-        "_id": JSON.parse(f.xhr.response)._id,
-        "name": f.meta.name
-    });
 
       f.remove();
     });
