@@ -4,6 +4,7 @@ import { ICourse } from "./Course.model";
 import { IProfessor } from "./Professor.model";
 import { CourseType } from "./ProfessorGroup.model";
 import { IQuiz } from "./Quiz.model";
+import { ISession } from "./Session.model";
 
 interface IAnswer {
     definition: string;
@@ -21,6 +22,7 @@ interface IEvaluation extends mongoose.Document {
     type: CourseType;
     quiz: string | IQuiz;
     answers: Array<IAnswerSection>;
+    session: string | ISession;
 }
 
 const evaluationSchema = new mongoose.Schema({
@@ -49,7 +51,11 @@ const evaluationSchema = new mongoose.Schema({
                 }
             ]
         }
-    ]
+    ],
+    session: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'Session'
+    }
 }, {
     timestamps: true
 });

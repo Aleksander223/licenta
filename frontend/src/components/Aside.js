@@ -8,7 +8,7 @@ import { useHistory } from "react-router-dom";
 import { FaHome, FaDatabase, FaKey, FaBars, FaUpload, FaCalendarCheck } from "react-icons/fa";
 import { Container, Col, Row, Card, Button, Collapse  } from "react-bootstrap";
 
-import { useWindowDimensions } from "../services/util";
+import { useWindowDimensions, typeOfUser } from "../services/util";
 import { AppContext } from "../services/context";
  
 export default function Aside(props) {
@@ -26,6 +26,63 @@ export default function Aside(props) {
         asideOpen = context.aside;
     }
 
+    const items = typeOfUser == 0 ? [
+        {
+            title: "Home",
+            itemId: "/admin",
+            elemBefore: () => <FaHome />,
+        },
+        {
+            title: "Session",
+            itemId: "1",
+            elemBefore: () => <FaCalendarCheck />,
+            subNav: [
+                {
+                    title: "Create",
+                    itemId: "/session",
+                },
+                {
+                    title: "View",
+                    itemId: "/session/view",
+                }
+            ]
+        },
+        {
+            title: "Data",
+            itemId: "2",
+            elemBefore: () => <FaDatabase />,
+            subNav: [
+                {
+                    title: "Courses",
+                    itemId: "/courses",
+                },
+                {
+                    title: "Professors",
+                    itemId: "/professors",
+                },
+                {
+                    title: "Groups",
+                    itemId: "/groups",
+                },
+                {
+                    title: "Timetable",
+                    itemId: "/timetable",
+                },
+            ],
+        },
+        {
+            title: "Tokens",
+            itemId: "/tokens",
+            elemBefore: () => <FaKey />,
+        },
+    ] : [
+        {
+            title: "Home",
+            itemId: "/report",
+            elemBefore: () => <FaHome />,
+        }
+    ];
+
     return (
         <>
             {
@@ -41,60 +98,11 @@ export default function Aside(props) {
             >
                 <Navigation
                     onSelect={({ itemId }) => {
-                        if (itemId != "") {
+                        if (itemId[0] == "/") {
                             history.push(itemId);
                         }
                     }}
-                    items={[
-                        {
-                            title: "Home",
-                            itemId: "/admin",
-                            elemBefore: () => <FaHome />,
-                        },
-                        {
-                            title: "Session",
-                            itemId: "",
-                            elemBefore: () => <FaCalendarCheck />,
-                            subNav: [
-                                {
-                                    title: "Create",
-                                    itemId: "/session",
-                                },
-                                {
-                                    title: "View",
-                                    itemId: "/session/view",
-                                }
-                            ]
-                        },
-                        {
-                            title: "Data",
-                            itemId: "",
-                            elemBefore: () => <FaDatabase />,
-                            subNav: [
-                                {
-                                    title: "Courses",
-                                    itemId: "/courses",
-                                },
-                                {
-                                    title: "Professors",
-                                    itemId: "/professors",
-                                },
-                                {
-                                    title: "Groups",
-                                    itemId: "/groups",
-                                },
-                                {
-                                    title: "Timetable",
-                                    itemId: "/timetable",
-                                },
-                            ],
-                        },
-                        {
-                            title: "Tokens",
-                            itemId: "/tokens",
-                            elemBefore: () => <FaKey />,
-                        },
-                    ]}
+                    items={items}
                 />
             </div>
             </Col>

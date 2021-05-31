@@ -13,6 +13,7 @@ interface IUser extends mongoose.Document {
     email: string;
     password: string;
     role: Role;
+    code?: string;
 }
 
 interface UserJWT {
@@ -31,6 +32,9 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: mongoose.SchemaTypes.Number,
+    },
+    code: {
+        type: mongoose.SchemaTypes.String
     }
 });
 

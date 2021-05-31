@@ -1,8 +1,9 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { Container, Card, Form, Button, InputGroup } from "react-bootstrap";
 import { FaEnvelope, FaLock, FaSignInAlt } from "react-icons/fa";
 
 import axios from "axios";
+import { typeOfUser } from "../services/util";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -25,13 +26,19 @@ export default function Login() {
         password
       }).then(r => {
         window.sessionStorage.setItem("auth", r.data.token);
-        window.location.href="/admin";
+        if (typeOfUser == 0) {
+          window.location.href="/admin";
+        } else {
+          window.location.href="/report";
+        }
       }).catch(e => {
         console.log(e);
         alert("Invalid email or password");
       })
     }
-  }
+  };
+
+  
 
   return (
     <Container>

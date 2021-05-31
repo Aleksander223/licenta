@@ -14,7 +14,7 @@ export default function Quiz() {
   const [answers, setAnswers] = useState(null);
   const [textAnswer, setTextAnswer] = useState("");
 
-  const { professor, course, type, courseName, professorName } = useParams(); 
+  const { professor, course, type, courseName, professorName, session } = useParams(); 
 
   useEffect(() => {
     axios
@@ -82,7 +82,8 @@ export default function Quiz() {
         answers,
         course,
         professor,
-        type: transformQuizNameToType(type)
+        type: transformQuizNameToType(type),
+        session
       }
 
       data.answers[currentSection].questions[0] = {

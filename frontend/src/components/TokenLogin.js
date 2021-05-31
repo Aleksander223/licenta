@@ -1,10 +1,11 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { Container, Card, Form, Button, InputGroup } from "react-bootstrap";
 import { FaKey, FaSignInAlt, FaBackspace } from "react-icons/fa";
 import axios from "axios";
 
 export default function TokenLogin() {
   const [token, setToken] = useState("");
+  const [activeSession, setActiveSession] = useState(false);
 
   const handleToken = (e) => {
     setToken(e.target.value);    
@@ -27,11 +28,24 @@ export default function TokenLogin() {
         alert("Invalid token");
       });
     }
-  }
+  };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/session/current", {
+        headers: {
+          Authorization: window.sessionStorage.getItem("auth"),
+        },
+      })
+      .then((r) => {
+        setActiveSession(true);
+      });
+  }, []);
 
   return (
     <Container>
-      <Card
+      { !activeSession ? <p className="display-3">Nici o sesiune de evaluare activa</p> 
+      : <Card
         expand="lg"
         style={{
           background: "white",
@@ -62,7 +76,7 @@ export default function TokenLogin() {
             </Button>
           </Form>
         </Container>
-      </Card>
+      </Card>}
     </Container>
   );
 }

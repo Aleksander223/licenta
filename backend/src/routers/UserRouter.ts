@@ -2,9 +2,10 @@ import express from "express";
 
 import { User } from "../models/User.model";
 import { login } from "../services/login";
-import { verifyAdmin, verifyUser } from "../middlewares/auth";
+import { verifyAdmin, verifyProfessor, verifyUser } from "../middlewares/auth";
 import { Evaluation } from "../models/Evaluation.model";
 import { Session } from "../models/Session.model";
+import { Professor } from "../models/Professor.model";
 
 const router = express.Router();
 
@@ -23,7 +24,8 @@ router.post("/user", async (req, res) => {
         const user = new User({
             email: req.body.email,
             password: req.body.password,
-            role: req.body.role
+            role: req.body.role,
+            code: req.body.code
         });
 
         await user.save();
@@ -70,7 +72,9 @@ router.get("/evaluations/total", async (req, res) => {
             throw new Error("No session active");
         }
 
-        const evaluations = await Evaluation.find();
+        const evaluations = await Evaluation.find({
+            session: session._id
+        });
 
         return res.status(200).send({
             noEvaluations: evaluations.length
@@ -97,7 +101,8 @@ router.get("/evaluations/latest", async (req, res) => {
         const evaluations = await Evaluation.find({
             createdAt: {
                 $gt: new Date(Date.now() - 86400000)
-            }
+            },
+            session: session._id
         });
         
 
@@ -138,7 +143,8 @@ router.get("/evaluations/bins", async (req, res) => {
                 createdAt: {
                     $gte: leftLimit,
                     $lt: rightLimit
-                }
+                },
+                session: session._id
             });
 
             bins.push(evaluations.length);
@@ -149,6 +155,41 @@ router.get("/evaluations/bins", async (req, res) => {
         });
 
     } catch (error) {
+        return res.status(500).send({
+            error
+        });
+    }
+});
+
+router.get("/report", [verifyUser, verifyProfessor], async (req, res) => {
+    try {
+        console.log(req.user);
+
+        const professor = await Professor.findOne({
+            code: req.user.code
+        });
+
+        if (!professor) {
+            throw new Error("No professor found");
+        }
+
+        const evaluations = await Evaluation.find({
+            professor: professor._id
+        }).populate([
+            {
+                path: 'professor'
+            },
+            {
+                path: 'course'
+            },
+            {
+                path: 'session'
+            }
+        ]);
+
+        return res.status(200).send(evaluations);
+    } catch (error) {
+        console.log(error);
         return res.status(500).send({
             error
         });

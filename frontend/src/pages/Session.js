@@ -60,9 +60,9 @@ export default function Session() {
                 "Authorization": window.sessionStorage.getItem("auth")
             }
         }).then(r => {
-          Swal.fire('Sesiune creata', 'success');
+          Swal.fire('Succes', 'Sesiunea a fost creata cu success', 'success');
         }).catch(e => {
-          Swal.fire('Eroare', 'error');
+          Swal.fire('Eroare', 'Sesiunea nu putut fi creata. Incercati mai tarziu.', 'error');
         });
 
   }

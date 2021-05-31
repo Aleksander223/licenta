@@ -12,6 +12,8 @@ export default function Evaluations() {
         unsentEvaluations: []
     });
 
+    const [session, setSession] = useState("");
+
     useEffect(() => {
         axios.get("http://127.0.0.1:5000/student/status", {
             headers: {
@@ -19,8 +21,15 @@ export default function Evaluations() {
             }
         }).then(r => {
             setStatus(r.data);
-            console.log(r.data);
-        })
+        });
+
+        axios.get("http://127.0.0.1:5000/session/current", {
+            headers: {
+                "Authorization": window.sessionStorage.getItem("auth")
+            }
+        }).then(r => {
+            setSession(r.data._id);
+        });
     }, []);
 
     return (
@@ -48,7 +57,7 @@ export default function Evaluations() {
                                             {x.professor.name} - {transformTypeToName(x.type)}
                                         </p>
                                     </Card.Text>
-                                    <Button href={`/quiz/${x.course._id}/${x.course.name}/${x.professor._id}/${x.professor.name}/${transformTypeToQuizName(x.type)}`}>Start</Button>
+                                    <Button href={`/quiz/${session}/${x.course._id}/${x.course.name}/${x.professor._id}/${x.professor.name}/${transformTypeToQuizName(x.type)}`}>Start</Button>
                                 </Card>
                             </Col>
                         );

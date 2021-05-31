@@ -19,6 +19,7 @@ import Groups from "./pages/Groups";
 import Courses from "./pages/Courses";
 import Timetable from "./pages/Timetable";
 import Session from "./pages/Session";
+import Report from "./pages/Report";
 
 function App() {
   const [aside, setAside] = useState(true);
@@ -43,7 +44,8 @@ function App() {
         <Route exact path="/timetable" component={Timetable}></Route>
         <Route exact path="/session" component={Session}></Route>
         <Route exact path="/session/view" component={SessionView}></Route>
-        <Route path="/quiz/:course/:courseName/:professor/:professorName/:type" component={Quiz}></Route>
+        <Route exact path="/report" component={Report}></Route>
+        <Route path="/quiz/:session/:course/:courseName/:professor/:professorName/:type" component={Quiz}></Route>
         {isLoggedIn() == 1 && <Route exact path="/evaluate" component={Evaluations}></Route>}
         <Route component={() => <Redirect to="/"/>}></Route>
       </Switch>

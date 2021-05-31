@@ -1,6 +1,7 @@
 import express from "express";
 
 import { Session } from "../models/Session.model";
+import { Token } from "../models/Token.model";
 
 const router = express.Router();
 
@@ -45,6 +46,35 @@ router.get("/session/current", async (req, res) => {
                 error: "No session active"
             });
         }
+
+        return res.status(200).send(session);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            error
+        });
+    }
+});
+
+router.post("/session/stop", async (req, res) => {
+    try {
+        const session = await Session.findOne({}, null, {
+            sort: {
+                $natural: -1
+            }
+        });
+
+        if (!session || !session.active) {
+            return res.status(404).send({
+                error: "No session active"
+            });
+        }
+
+        session.endDate = new Date();
+
+        await Token.deleteMany();
+
+        await session.save();
 
         return res.status(200).send(session);
     } catch (error) {

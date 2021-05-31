@@ -46,21 +46,53 @@ export default function SessionView() {
         }
       )
       .then((r) => {
-        Swal.fire("Sesiune actualizata", "success");
+        Swal.fire("Success", "Sesiune actualizata", "success");
       })
       .catch((e) => {
-        Swal.fire("Eroare", "error");
+        Swal.fire("Eroare", "Sesiunea nu a putut fi actualizata. Incercati mai tarziu", "error");
       });
   }
 
   function generateTokens() {
-    axios.post("http://127.0.0.1:5000/tokens/generate", null, {
-      headers: {
-        "Authorization": window.sessionStorage.getItem("auth")
+    axios
+      .post("http://127.0.0.1:5000/tokens/generate", null, {
+        headers: {
+          Authorization: window.sessionStorage.getItem("auth"),
+        },
+      })
+      .then((r) => {
+        Swal.fire("Sucess", "Tokenii au fost generati cu succes.", "success");
+      })
+      .catch((e) => {
+        Swal.fire(
+          "Eroare",
+          "Tokenii nu au fost generati. Incercati mai tarziu.",
+          "error"
+        );
+      });
+  }
+
+  function stopSession() {
+    Swal.fire({
+      title: "Sunteti sigur?",
+      text: "Aceasta operatie nu poate fi inversata",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Da",
+      cancelButtonText: "Inapoi",
+    }).then((r) => {
+      if (r.isConfirmed) {
+        axios.post("http://127.0.0.1:5000/session/stop", null, {
+          headers: {
+            Authorization: window.sessionStorage.getItem("auth"),
+          },
+        }).then(r => {
+          Swal.fire("Succes", "Sesiunea a fost oprita", "succes");
+        }).catch(e => {
+          Swal.fire("Eroare", "Sesiunea nu a fost oprita. Incercati mai tarziu.", "error");
+        });
       }
-    }).catch(e => {
-      console.log(e);
-    })
+    });
   }
 
   useEffect(() => {
@@ -169,23 +201,26 @@ export default function SessionView() {
               </Row>
               <Row>
                 <Col>
-                <Card className="mt-5"
-                  style={{
-                    background: "white",
-                    borderRadius: "8px",
-                    boxShadow: "-1px 8px 10px -15px black",
-                    padding: "15px",
-                  }}
-                >
-                  <Card.Title>Panou de control</Card.Title>
-                  <Card.Text>&nbsp;</Card.Text>
-                  <Card.Body>
-                    <Button className="mx-3 my-1" onClick={generateTokens}>Generare tokeni</Button>
-                    <Button className="mx-3 my-1" variant="danger">
-                      Stop sesiune
-                    </Button>
-                  </Card.Body>
-                </Card>
+                  <Card
+                    className="mt-5"
+                    style={{
+                      background: "white",
+                      borderRadius: "8px",
+                      boxShadow: "-1px 8px 10px -15px black",
+                      padding: "15px",
+                    }}
+                  >
+                    <Card.Title>Panou de control</Card.Title>
+                    <Card.Text>&nbsp;</Card.Text>
+                    <Card.Body>
+                      <Button className="mx-3 my-1" onClick={generateTokens}>
+                        Generare tokeni
+                      </Button>
+                      <Button className="mx-3 my-1" variant="danger" onClick={stopSession}>
+                        Stop sesiune
+                      </Button>
+                    </Card.Body>
+                  </Card>
                 </Col>
               </Row>
             </Col>

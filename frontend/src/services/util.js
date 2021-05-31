@@ -88,3 +88,13 @@ export function isLoggedIn() {
         return 2;
     }
 }
+
+export function typeOfUser() {
+    const token = window.sessionStorage.getItem("auth");
+
+    const tok = jwt.decode(token);
+
+    if (tok.hasOwnProperty("role")) {
+        return tok.role;
+    }
+}
