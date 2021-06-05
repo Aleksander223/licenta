@@ -1,5 +1,4 @@
 import { parseStringPromise } from "xml2js";
-import util from "util";
 
 import {QuestionType} from "../models/Quiz.model";
 
@@ -47,8 +46,6 @@ export async function parseXML(xml: string) {
             }
         }
     }
-
-    // console.log(util.inspect(result, false, null, true));
 
     return result;
 }

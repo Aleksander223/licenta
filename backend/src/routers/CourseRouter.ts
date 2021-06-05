@@ -7,6 +7,8 @@ import multer from "multer";
 import { parseCourseCSV } from "../services/parseCSV";
 import { Course } from "../models/Course.model";
 
+import {verifyUser, verifyAdmin} from "../middlewares/auth";
+
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: {
@@ -14,7 +16,7 @@ const upload = multer({
         files: 1
     },
     fileFilter: (req, file, cb) => {
-        if (path.extname(file.originalname) !== '.csv') {
+        if (path.extname(file.originalname) !== '.csv') {   
             return cb(new Error("Invalid filetype"));
         }
 
@@ -37,7 +39,7 @@ router.get("/courses", async (req, res) => {
     }
 });
 
-router.post("/courses", upload.single("file"), async (req, res) => {
+router.post("/courses", [verifyUser, verifyAdmin, upload.single("file")], async (req, res) => {
     try {
         const courses = await parseCourseCSV(req.file.buffer.toString());
 

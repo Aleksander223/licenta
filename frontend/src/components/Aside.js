@@ -26,7 +26,7 @@ export default function Aside(props) {
         asideOpen = context.aside;
     }
 
-    const items = typeOfUser == 0 ? [
+    const items = typeOfUser() == 0 ? [
         {
             title: "Home",
             itemId: "/admin",

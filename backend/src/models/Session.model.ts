@@ -54,7 +54,7 @@ sessionSchema.virtual('active').get(function() {
 
 
     return this.startDate < currentDate && currentDate < this.endDate;
-})
+});
 
 const Session = mongoose.model<ISession>("Session", sessionSchema);
 

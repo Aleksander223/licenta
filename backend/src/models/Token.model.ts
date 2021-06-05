@@ -10,7 +10,6 @@ interface IToken extends mongoose.Document {
     value: string;
     session: string | ISession;
     group: string  | IGroup;
-    used: boolean;
     sentEvaluations: Array<string | IProfessorGroup>;
     unsentEvalations: Array<string | IProfessorGroup>;
 }
@@ -29,10 +28,6 @@ const tokenSchema = new mongoose.Schema({
     group: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'Group'
-    },
-    used: {
-        type: mongoose.SchemaTypes.Boolean,
-        default: false
     },
     sentEvaluations: [
         {

@@ -12,13 +12,7 @@ router.post("/tokens/generate", [verifyUser, verifyAdmin], async (req, res) => {
     try {
         await Token.deleteMany({});
 
-        const session = await Session.findOne({}, null, {
-            sort: {
-                $natural: -1
-            }
-        });
-
-        const finalYear = session.finalYear ? true : false;
+        const finalYear = req.body.finalYear;
 
         const groups = await Group.find({
             finalYear

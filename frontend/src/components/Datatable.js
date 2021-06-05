@@ -95,7 +95,12 @@ function generateDocument(jsonData, columns) {
                     if (typeof val == "boolean") {
                       return val ? "Da" : "Nu";
                     }
-
+                    
+                    if (!val) {
+                      return "";
+                    } else {
+                      
+                    }
                     return val.toString();
                   }}
                   key={x.name}
