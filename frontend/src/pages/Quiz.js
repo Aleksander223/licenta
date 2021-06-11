@@ -17,34 +17,40 @@ export default function Quiz() {
   const { professor, course, type, courseName, professorName, session } = useParams(); 
 
   useEffect(() => {
-    axios
-      .get("http://127.0.0.1:5000/session/current", {
-        headers: {
-          Authorization: window.sessionStorage.getItem("auth"),
-        },
-      })
-      .then((r) => {
-        const currentQuiz = r.data[type];
-
-        setTemplate(currentQuiz);
-        setNoSections(currentQuiz.quiz.sections.length);
-
-        const ansr = []
-
-        for (let i = 0; i < currentQuiz.quiz.sections.length; i++) {
-          const arr = new Array(currentQuiz.quiz.sections[i].questions.length).fill({
-            definition: "",
-            choice: "",
-            i: -1
+    axios.get("http://127.0.0.1:5000/student/status", {
+            headers: {
+                "Authorization": window.sessionStorage.getItem("auth")
+            }
+        }).then(res => {
+          axios
+          .get(`http://127.0.0.1:5000/session/current?final=${res.data.finalYear ? "yes" : "no"}`, {
+            headers: {
+              Authorization: window.sessionStorage.getItem("auth"),
+            },
+          })
+          .then((r) => {
+            const currentQuiz = r.data[type];
+    
+            setTemplate(currentQuiz);
+            setNoSections(currentQuiz.quiz.sections.length);
+    
+            const ansr = []
+    
+            for (let i = 0; i < currentQuiz.quiz.sections.length; i++) {
+              const arr = new Array(currentQuiz.quiz.sections[i].questions.length).fill({
+                definition: "",
+                choice: "",
+                i: -1
+              });
+    
+              ansr.push({
+                questions: arr
+              });
+            }
+    
+            setAnswers(ansr);
           });
-
-          ansr.push({
-            questions: arr
-          });
-        }
-
-        setAnswers(ansr);
-      });
+        });
   }, []);
 
   const handleAnswer = (idx, i, definition, choice) => {

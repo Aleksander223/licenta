@@ -18,6 +18,11 @@ const columns = [
         sortable: true
     },
     {
+        name: "Semestru",
+        selector: "course.semester",
+        sortable: true
+    },
+    {
         name: "Tip",
         selector: "type",
         sortable: true,

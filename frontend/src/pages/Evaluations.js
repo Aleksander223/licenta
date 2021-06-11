@@ -21,14 +21,7 @@ export default function Evaluations() {
             }
         }).then(r => {
             setStatus(r.data);
-        });
-
-        axios.get("http://127.0.0.1:5000/session/current", {
-            headers: {
-                "Authorization": window.sessionStorage.getItem("auth")
-            }
-        }).then(r => {
-            setSession(r.data._id);
+            setSession(r.data.session);
         });
     }, []);
 
@@ -62,6 +55,7 @@ export default function Evaluations() {
                             </Col>
                         );
                     })}
+                    {status.unsentEvaluations.length == 0 && <p className="display-4">Felicitări, ai trimis toate evaluările!</p>}
                 </Row>
             </Container>
         </>

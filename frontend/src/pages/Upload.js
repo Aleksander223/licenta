@@ -10,7 +10,9 @@ export default function Upload(props) {
   const [inputContent, setInputContent] = React.useState("Drag Files or Click to Browse");
 
   const getUploadParams = ({ meta }) => { 
-    return { url: props.url } 
+    return { url: props.url, headers: {
+      Authorization: window.sessionStorage.getItem("auth")
+    } } 
   }
 
   const handleSubmit = (files, allFiles) => {

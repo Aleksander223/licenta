@@ -28,56 +28,60 @@ export default function Aside(props) {
 
     const items = typeOfUser() == 0 ? [
         {
-            title: "Home",
+            title: "Acasă",
             itemId: "/admin",
             elemBefore: () => <FaHome />,
         },
         {
-            title: "Session",
+            title: "Sesiune",
             itemId: "1",
             elemBefore: () => <FaCalendarCheck />,
             subNav: [
                 {
-                    title: "Create",
+                    title: "Creează",
                     itemId: "/session",
                 },
                 {
-                    title: "View",
+                    title: "Sesiune normală",
                     itemId: "/session/view",
+                },
+                {
+                    title: "Sesiune ani finali",
+                    itemId: "/session/view/final",
                 }
             ]
         },
         {
-            title: "Data",
+            title: "Date",
             itemId: "2",
             elemBefore: () => <FaDatabase />,
             subNav: [
                 {
-                    title: "Courses",
+                    title: "Cursuri",
                     itemId: "/courses",
                 },
                 {
-                    title: "Professors",
+                    title: "Profesori",
                     itemId: "/professors",
                 },
                 {
-                    title: "Groups",
+                    title: "Grupe",
                     itemId: "/groups",
                 },
                 {
-                    title: "Timetable",
+                    title: "Orar",
                     itemId: "/timetable",
                 },
             ],
         },
         {
-            title: "Tokens",
+            title: "Tokeni",
             itemId: "/tokens",
             elemBefore: () => <FaKey />,
         },
     ] : [
         {
-            title: "Home",
+            title: "Acasă",
             itemId: "/report",
             elemBefore: () => <FaHome />,
         }

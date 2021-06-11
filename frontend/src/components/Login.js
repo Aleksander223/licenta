@@ -2,6 +2,8 @@ import React, {useState, useEffect} from "react";
 import { Container, Card, Form, Button, InputGroup } from "react-bootstrap";
 import { FaEnvelope, FaLock, FaSignInAlt } from "react-icons/fa";
 
+import Swal from "sweetalert2";
+
 import axios from "axios";
 import { typeOfUser } from "../services/util";
 
@@ -26,14 +28,13 @@ export default function Login() {
         password
       }).then(r => {
         window.sessionStorage.setItem("auth", r.data.token);
-        if (typeOfUser == 0) {
+        if (typeOfUser() == 0) {
           window.location.href="/admin";
         } else {
           window.location.href="/report";
         }
       }).catch(e => {
-        console.log(e);
-        alert("Invalid email or password");
+        Swal.fire("Eroare", "Email sau parolă incorectă", "error");
       })
     }
   };

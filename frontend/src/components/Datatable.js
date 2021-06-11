@@ -96,7 +96,7 @@ function generateDocument(jsonData, columns) {
                       return val ? "Da" : "Nu";
                     }
                     
-                    if (!val) {
+                    if (val == null || val == undefined) {
                       return "";
                     } else {
                       

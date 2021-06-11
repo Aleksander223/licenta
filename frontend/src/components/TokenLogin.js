@@ -3,6 +3,8 @@ import { Container, Card, Form, Button, InputGroup } from "react-bootstrap";
 import { FaKey, FaSignInAlt, FaBackspace } from "react-icons/fa";
 import axios from "axios";
 
+import Swal from "sweetalert2";
+
 export default function TokenLogin() {
   const [token, setToken] = useState("");
   const [activeSession, setActiveSession] = useState(false);
@@ -25,14 +27,14 @@ export default function TokenLogin() {
         window.sessionStorage.setItem("auth", r.data.token);
         window.location.href="/evaluate";
       }).catch(e => {
-        alert("Invalid token");
+        Swal.fire("Eroare", "Token invalid", "error");
       });
     }
   };
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/session/current", {
+      .get("http://localhost:5000/session/exists", {
         headers: {
           Authorization: window.sessionStorage.getItem("auth"),
         },

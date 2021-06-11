@@ -14,7 +14,7 @@ import Swal from "sweetalert2";
 
 import axios from "axios";
 
-export default function SessionView() {
+export default function SessionView(props) {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [semester, setSemester] = useState(0);
@@ -55,7 +55,7 @@ export default function SessionView() {
 
   function generateTokens() {
     axios
-      .post("http://127.0.0.1:5000/tokens/generate", null, {
+      .post(`http://127.0.0.1:5000/tokens/generate?final=${props.final==true ? "yes" : "no"}`, null, {
         headers: {
           Authorization: window.sessionStorage.getItem("auth"),
         },
@@ -82,7 +82,7 @@ export default function SessionView() {
       cancelButtonText: "Inapoi",
     }).then((r) => {
       if (r.isConfirmed) {
-        axios.post("http://127.0.0.1:5000/session/stop", null, {
+        axios.post(`http://127.0.0.1:5000/session/stop?final=${props.final==true ? "yes" : "no"}`, null, {
           headers: {
             Authorization: window.sessionStorage.getItem("auth"),
           },
@@ -97,7 +97,7 @@ export default function SessionView() {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:5000/session/current", {
+      .get(`http://127.0.0.1:5000/session/current?final=${props.final==true ? "yes" : "no"}`, {
         headers: {
           Authorization: window.sessionStorage.getItem("auth"),
         },
