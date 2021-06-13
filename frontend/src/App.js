@@ -46,7 +46,7 @@ function App() {
         {isLoggedIn() == 2 && <Route exact path="/session" component={Session}></Route>}
         {isLoggedIn() == 2 && <Route exact path="/session/view" component={() => <SessionView final={false} />}></Route>}
         {isLoggedIn() == 2 && <Route exact path="/session/view/final" component={() => <SessionView final={true} />}></Route>}
-        {isLoggedIn() == 2 && typeOfUser() != 0 && <Route exact path="/report" component={Report}></Route>}
+        {isLoggedIn() == 2 && typeOfUser() != 0 && <Route exact path="/report" component={() => <Sessions generateReports={true} />}></Route>}
         {isLoggedIn() == 1 && <Route path="/quiz/:session/:course/:courseName/:professor/:professorName/:type" component={Quiz}></Route>}
         {isLoggedIn() == 1 && <Route exact path="/evaluate" component={Evaluations}></Route>}
         {isLoggedIn() == 2 && <Route exact path="/sessions" component={Sessions}/>}

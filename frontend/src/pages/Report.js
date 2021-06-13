@@ -68,7 +68,6 @@ export default function Report() {
       }, []);
 
   function generateReport() {
-    console.log(reports);
 
     if (reports == []) {
         return (
@@ -85,20 +84,13 @@ export default function Report() {
                   return (
                     <Page style={styles.page}>
                         <Text style={styles.display}>{`${x.professor.name} - ${x.course.name} ${transformTypeToName(x.type)}`}</Text>
-                        {x.answers.map((y) => {
-                            return (
-                            <>
-                            {
-                                y.questions.map((z) => {
+                        {/* {x.answers.map((z) => {
                                     return (
                                     <>
                                     <Text style={styles.boldText}>{z.definition}</Text>
                                     <Text style={styles.normalText}>{z.choice}</Text>
                                     </>);
-                                })
-                            }
-                            </>);
-                        })}
+                                })} */}
                     </Page>
                   );
                 })}
