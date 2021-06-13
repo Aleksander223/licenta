@@ -44,6 +44,7 @@ export default function Homepage() {
   const [key, setKey] = useState("sesiuneNormala");
   const [totalE, setTotalE] = useState(0);
   const [latestE, setLatestE] = useState(0);
+  const [noPeople, setNoPeople] = useState(0);
   const [state, setState] = useState({
     options: {
       chart: {
@@ -134,6 +135,16 @@ export default function Homepage() {
         setTotalE(r.data.noEvaluations);
       });
 
+      axios
+      .get(`http://127.0.0.1:5000/evaluations/people?final=${key=="sesiuneAniFinali" ? "yes": "no"}`, {
+        headers: {
+          Authorization: window.sessionStorage.getItem("auth"),
+        },
+      })
+      .then((r) => {
+        setNoPeople(r.data.noPeople);
+      });
+
     axios
       .get(`http://127.0.0.1:5000/evaluations/latest?final=${key=="sesiuneAniFinali" ? "yes": "no"}`, {
         headers: {
@@ -168,6 +179,26 @@ export default function Homepage() {
             </Row>
             {sessionActive ? (
               <>
+              <Row>
+                  <Col>
+                  <Card
+                      className="text-center"
+                      style={{
+                        background: "white",
+                        borderRadius: "8px",
+                        boxShadow: "-1px 8px 10px -15px black",
+                        padding: "15px",
+                      }}
+                    >
+                      <Card.Title>
+                        <h1 className="display-1">{noPeople}</h1>
+                      </Card.Title>
+                      <Card.Text>
+                        <p className="lead">respondenți</p>
+                      </Card.Text>
+                    </Card>
+                  </Col>
+                </Row>
                 <Row className="mt-5 equal">
                   <Col className="">
                     <Card
@@ -183,7 +214,7 @@ export default function Homepage() {
                         <h1 className="display-1">{latestE}</h1>
                       </Card.Title>
                       <Card.Text>
-                        <p className="lead">respondenți în ultimele 24h</p>
+                        <p className="lead">răspunsuri în ultimele 24h</p>
                       </Card.Text>
                     </Card>
                   </Col>
@@ -201,11 +232,12 @@ export default function Homepage() {
                         <h1 className="display-1">{totalE}</h1>
                       </Card.Title>
                       <Card.Text>
-                        <p className="lead">respondenți în total</p>
+                        <p className="lead">răspunsuri în total</p>
                       </Card.Text>
                     </Card>
                   </Col>
                 </Row>
+                
                 <Row>
                   <Col>
                     <Chart

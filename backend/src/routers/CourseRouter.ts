@@ -24,7 +24,7 @@ const upload = multer({
     }
 });
 
-router.get("/courses", async (req, res) => {
+router.get("/courses", [verifyUser, verifyAdmin], async (req, res) => {
     try {
         const courses = await Course.find();
 
@@ -39,7 +39,10 @@ router.get("/courses", async (req, res) => {
     }
 });
 
-router.post("/courses", [verifyUser, verifyAdmin, upload.single("file")], async (req, res) => {
+router.post("/courses", 
+            [verifyUser, verifyAdmin, upload.single("file")],
+             async (req, res) => 
+{
     try {
         const courses = await parseCourseCSV(req.file.buffer.toString());
 
@@ -58,7 +61,7 @@ router.post("/courses", [verifyUser, verifyAdmin, upload.single("file")], async 
     }
 });
 
-router.put("/course/:id", async(req, res) => {
+router.put("/course/:id", [verifyUser, verifyAdmin], async(req, res) => {
     try {
         const course = await Course.findByIdAndUpdate(req.params.id, req.body);
 
@@ -77,7 +80,7 @@ router.put("/course/:id", async(req, res) => {
     } 
 });
 
-router.delete("/course/:id", async (req, res) => {
+router.delete("/course/:id", [verifyUser, verifyAdmin], async (req, res) => {
     try {
         await Course.findByIdAndDelete(req.params.id);
 

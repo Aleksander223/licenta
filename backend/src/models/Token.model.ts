@@ -11,7 +11,8 @@ interface IToken extends mongoose.Document {
     session: string | ISession;
     group: string  | IGroup;
     sentEvaluations: Array<string | IProfessorGroup>;
-    unsentEvalations: Array<string | IProfessorGroup>;
+    unsentEvaluations: Array<string | IProfessorGroup>;
+    finalYear: boolean;
 }
 
 const tokenSchema = new mongoose.Schema({
@@ -42,7 +43,10 @@ const tokenSchema = new mongoose.Schema({
             ref: "ProfessorGroup",
             default: []
         }
-    ]
+    ],
+    finalYear: {
+        type: mongoose.SchemaTypes.Boolean
+    }
 });
 
 const Token = mongoose.model<IToken>("Token", tokenSchema);

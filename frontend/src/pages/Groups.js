@@ -21,15 +21,15 @@ const columns = [
         name: "Numar studenti",
         selector: "numberOfStudents",
         sortable: true,
+    },
+    {
+        name: 'An final',
+        selector: "finalYear",
+        sortable: true,
+        format: (row, index) => {
+            return row.finalYear ? "Da" : "Nu";
+        }
     }
-    // {
-    //     name: 'An final',
-    //     selector: "finalYear",
-    //     sortable: true,
-    //     format: (row, index) => {
-    //         return row.finalYear ? "Da" : "Nu";
-    //     }
-    // }
 ];
 
 export default function Groups() {

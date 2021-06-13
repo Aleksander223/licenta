@@ -6,6 +6,9 @@ import { verifyAdmin, verifyProfessor, verifyUser } from "../middlewares/auth";
 import { Evaluation } from "../models/Evaluation.model";
 import { Session } from "../models/Session.model";
 import { Professor } from "../models/Professor.model";
+import { Token } from "../models/Token.model";
+import { Course, ICourse } from "../models/Course.model";
+import { transformTypeToName } from "../services/util";
 
 const router = express.Router();
 
@@ -60,9 +63,12 @@ router.get("/status", verifyUser, async (req, res) => {
     }
 });
 
-router.get("/evaluations/total", async (req, res) => {
+router.get("/evaluations/total", [verifyUser, verifyAdmin], async (req, res) => {
     try {
-        const session = await Session.findOne({}, null, {
+        const finalYear = req.query.final == "yes" ? true : false;
+        const session = await Session.findOne({
+            finalYear
+        }, null, {
             sort: {
                 $natural: -1
             }
@@ -86,9 +92,12 @@ router.get("/evaluations/total", async (req, res) => {
     }
 });
 
-router.get("/evaluations/latest", async (req, res) => {
+router.get("/evaluations/latest", [verifyUser, verifyAdmin], async (req, res) => {
     try {
-        const session = await Session.findOne({}, null, {
+        const finalYear = req.query.final == "yes" ? true : false;
+        const session = await Session.findOne({
+            finalYear
+        }, null, {
             sort: {
                 $natural: -1
             }
@@ -116,9 +125,43 @@ router.get("/evaluations/latest", async (req, res) => {
     }
 });
 
-router.get("/evaluations/bins", async (req, res) => {
+router.get("/evaluations/people", [verifyUser, verifyAdmin], async (req, res) => {
     try {
-        const session = await Session.findOne({}, null, {
+        const finalYear = req.query.final == "yes" ? true : false;
+        const session = await Session.findOne({
+            finalYear
+        }, null, {
+            sort: {
+                $natural: -1
+            }
+        });
+
+        if (!session.active) {
+            throw new Error("No session active");
+        }
+
+        const evaluators = (await Token.find({
+            session: session._id
+        })).filter(x => x.unsentEvaluations.length == 0);
+
+        return res.status(200).send({
+            noPeople: evaluators.length
+        });
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            error
+        });
+    }
+});
+
+router.get("/evaluations/bins", [verifyUser, verifyAdmin], async (req, res) => {
+    try {
+        const finalYear = req.query.final == "yes" ? true : false;
+        const session = await Session.findOne({
+            finalYear
+        }, null, {
             sort: {
                 $natural: -1
             }
@@ -161,9 +204,8 @@ router.get("/evaluations/bins", async (req, res) => {
     }
 });
 
-router.get("/report", [verifyUser, verifyProfessor], async (req, res) => {
+router.get("/report/:id", [verifyUser, verifyProfessor], async (req, res) => {
     try {
-        console.log(req.user);
 
         const professor = await Professor.findOne({
             code: req.user.code
@@ -174,7 +216,8 @@ router.get("/report", [verifyUser, verifyProfessor], async (req, res) => {
         }
 
         const evaluations = await Evaluation.find({
-            professor: professor._id
+            professor: professor._id,
+            session: req.params.id
         }).populate([
             {
                 path: 'professor'
@@ -187,7 +230,53 @@ router.get("/report", [verifyUser, verifyProfessor], async (req, res) => {
             }
         ]);
 
-        return res.status(200).send(evaluations);
+        const courses = evaluations.map(x => (x.course as ICourse)._id).filter((x, i, self) => {
+            return self.indexOf(x) === i;
+        });
+
+        const types = evaluations.map(x => x.type).filter((x, i, self) => {
+            return self.indexOf(x) === i;
+        });
+
+        const aggregated = [];
+
+        for (const course of courses) {
+            for (const type of types) {
+                const obj = {};
+                const texts = [];
+                const matched = evaluations.filter(x => (x.course as ICourse)._id == course && x.type == type);
+                
+                for (const match of matched) {
+                    for (const section of match.answers.slice(0, -1)) {
+                        for (const question of section.questions) {
+                            if (!obj.hasOwnProperty(question.definition)) {
+                                obj[question.definition] = {};
+                            } 
+                            if (!obj[question.definition].hasOwnProperty(question.choice)) {
+                                obj[question.definition][question.choice] = 0;
+                            }
+
+                            obj[question.definition][question.choice]++;
+                        }
+                    }
+
+                    const text = match.answers[match.answers.length - 1].questions[0].choice;
+
+                    if (text != "" && text != null) {
+                        texts.push(text);
+                    }
+                }
+
+                aggregated.push({
+                    course: (await Course.findById(course)).name,
+                    type: transformTypeToName(type),
+                    answers: obj,
+                    texts
+                });
+            }
+        }
+
+        return res.status(200).send(aggregated);
     } catch (error) {
         console.log(error);
         return res.status(500).send({

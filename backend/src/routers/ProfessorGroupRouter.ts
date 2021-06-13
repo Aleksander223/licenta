@@ -9,6 +9,7 @@ import { ProfessorGroup, CourseType } from "../models/ProfessorGroup.model";
 import { Professor } from "../models/Professor.model";
 import { Course } from "../models/Course.model";
 import { constructProfessorGroupArray } from "../services/util";
+import { verifyUser, verifyAdmin } from "../middlewares/auth";
 
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -25,7 +26,7 @@ const upload = multer({
     }
 });
 
-router.post("/timetable", upload.single("file"), async (req, res) => {
+router.post("/timetable", [verifyUser, verifyAdmin, upload.single("file")], async (req, res) => {
     try {
         const professorGroups = await parseProfessorGroupCSV(req.file.buffer.toString());
 
@@ -59,7 +60,7 @@ router.post("/timetable", upload.single("file"), async (req, res) => {
     }
 });
 
-router.get("/timetable", async (req, res) => {
+router.get("/timetable", [verifyUser, verifyAdmin], async (req, res) => {
     try {
         const professorGroups = await ProfessorGroup.find().populate([
             {

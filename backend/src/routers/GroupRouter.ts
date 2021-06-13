@@ -7,6 +7,7 @@ import multer from "multer";
 import { parseGroupCSV } from "../services/parseCSV";
 import { Group } from "../models/Group.model";
 import { Course } from "../models/Course.model";
+import { verifyAdmin, verifyUser } from "../middlewares/auth";
 
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -23,7 +24,7 @@ const upload = multer({
     }
 });
 
-router.get("/groups", async (req, res) => {
+router.get("/groups", [verifyUser, verifyAdmin], async (req, res) => {
     try {
         const groups = await Group.find();
 
@@ -38,7 +39,7 @@ router.get("/groups", async (req, res) => {
     }
 });
 
-router.post("/groups", upload.single("file"), async (req, res) => {
+router.post("/groups", [verifyUser, verifyAdmin, upload.single("file")], async (req, res) => {
     try {
         const groups = await parseGroupCSV(req.file.buffer.toString());
 
@@ -65,7 +66,7 @@ router.post("/groups", upload.single("file"), async (req, res) => {
     }
 });
 
-router.put("/group/:id", async(req, res) => {
+router.put("/group/:id", [verifyUser, verifyAdmin],  async(req, res) => {
     try {
         const group = await Group.findByIdAndUpdate(req.params.id, req.body);
 
@@ -84,7 +85,7 @@ router.put("/group/:id", async(req, res) => {
     } 
 });
 
-router.delete("/group/:id", async (req, res) => {
+router.delete("/group/:id", [verifyUser, verifyAdmin], async (req, res) => {
     try {
         await Group.findByIdAndDelete(req.params.id);
 

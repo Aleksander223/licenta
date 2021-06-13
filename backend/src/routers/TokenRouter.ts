@@ -5,14 +5,25 @@ import { Group } from "../models/Group.model";
 import { ProfessorGroup } from "../models/ProfessorGroup.model";
 import { Token } from "../models/Token.model";
 import { Session } from "../models/Session.model";
+import { ICourse } from "../models/Course.model";
 
 const router = express.Router();
 
 router.post("/tokens/generate", [verifyUser, verifyAdmin], async (req, res) => {
     try {
-        await Token.deleteMany({});
+        const finalYear = req.query.final == "yes" ? true : false;
 
-        const finalYear = req.body.finalYear;
+        const session = await Session.findOne({
+            finalYear
+        }, null, {
+            sort: {
+                $natural: -1
+            }
+        });
+
+        await Token.deleteMany({
+            finalYear
+        });
 
         const groups = await Group.find({
             finalYear
@@ -28,12 +39,17 @@ router.post("/tokens/generate", [verifyUser, verifyAdmin], async (req, res) => {
 
             const evaluations = (await ProfessorGroup.find({
                 group: groups[i]._id
-            })).map(x => x._id);
+            }).populate({
+                path: "course"
+            })).filter(x => (x.course as ICourse).semester == session.semester).map(x => x._id);
+
 
             for (let j = 0; j < groups[i].numberOfStudents; j++) {
                 const token = new Token({
                     unsentEvaluations: evaluations,
-                    group: groups[i]._id
+                    group: groups[i]._id,
+                    session: session._id,
+                    finalYear
                 });
 
                 await token.save();
@@ -47,6 +63,7 @@ router.post("/tokens/generate", [verifyUser, verifyAdmin], async (req, res) => {
         });
         
     } catch (error) {
+        console.log(error);
         return res.status(500).send({
             error
         });

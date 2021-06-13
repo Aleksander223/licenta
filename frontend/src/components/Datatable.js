@@ -201,7 +201,7 @@ export default function Datatable(props) {
               pagination={true}
               subHeader={true}
               progressPending={!loaded}
-              subHeaderComponent={
+              subHeaderComponent={!props.disableButtons &&
                 <div style={{ alignItems: "center" }}>
                   <Button
                     onClick={() => uploadData(props.url, handleShow)}

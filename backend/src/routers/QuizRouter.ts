@@ -5,6 +5,7 @@ import { Quiz } from "../models/Quiz.model";
 
 import path from "path";
 import multer from "multer";
+import { verifyAdmin, verifyUser } from "../middlewares/auth";
 
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -23,7 +24,7 @@ const upload = multer({
 
 const router = express.Router();
 
-router.post("/quiz", upload.single('file'), async (req, res) => {
+router.post("/quiz", [verifyUser, verifyAdmin, upload.single('file')], async (req, res) => {
     try {
         const parsedXML = await parseXML(req.file.buffer.toString());
 

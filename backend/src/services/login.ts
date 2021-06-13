@@ -39,8 +39,7 @@ export async function tokenLogin(token: string): Promise<string | never> {
     }
 
     const authToken = jwt.sign({
-        token,
-        // .. other data such as completed amount of quizzes
+        token
     }, process.env.SECRET!);
 
     return authToken;

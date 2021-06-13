@@ -6,6 +6,7 @@ import path from "path";
 import multer from "multer";
 import { parseProfessorCSV } from "../services/parseCSV";
 import { Professor } from "../models/Professor.model";
+import { verifyUser, verifyAdmin } from "../middlewares/auth";
 
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -22,7 +23,7 @@ const upload = multer({
     }
 });
 
-router.get("/professors", async (req, res) => {
+router.get("/professors", [verifyUser, verifyAdmin], async (req, res) => {
     try {
         const professors = await Professor.find();
 
@@ -37,7 +38,7 @@ router.get("/professors", async (req, res) => {
     }
 });
 
-router.post("/professors", upload.single("file"), async (req, res) => {
+router.post("/professors", [verifyUser, verifyAdmin], upload.single("file"), async (req, res) => {
     try {
         const professors = await parseProfessorCSV(req.file.buffer.toString());
 
@@ -56,7 +57,7 @@ router.post("/professors", upload.single("file"), async (req, res) => {
     }
 });
 
-router.put("/professor/:id", async(req, res) => {
+router.put("/professor/:id", [verifyUser, verifyAdmin], async(req, res) => {
     try {
         const professor = await Professor.findByIdAndUpdate(req.params.id, req.body);
 
@@ -75,7 +76,7 @@ router.put("/professor/:id", async(req, res) => {
     } 
 });
 
-router.delete("/professor/:id", async (req, res) => {
+router.delete("/professor/:id", [verifyUser, verifyAdmin], async (req, res) => {
     try {
         await Professor.findByIdAndDelete(req.params.id);
 

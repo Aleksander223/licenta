@@ -48,6 +48,10 @@ export default function Aside(props) {
                 {
                     title: "Sesiune ani finali",
                     itemId: "/session/view/final",
+                },
+                {
+                    title: "Listă",
+                    itemId: "/sessions"
                 }
             ]
         },

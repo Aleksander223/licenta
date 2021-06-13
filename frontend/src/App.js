@@ -20,6 +20,7 @@ import Courses from "./pages/Courses";
 import Timetable from "./pages/Timetable";
 import Session from "./pages/Session";
 import Report from "./pages/Report";
+import Sessions from "./pages/Sessions";
 
 function App() {
   const [aside, setAside] = useState(true);
@@ -48,6 +49,7 @@ function App() {
         {isLoggedIn() == 2 && typeOfUser() != 0 && <Route exact path="/report" component={Report}></Route>}
         {isLoggedIn() == 1 && <Route path="/quiz/:session/:course/:courseName/:professor/:professorName/:type" component={Quiz}></Route>}
         {isLoggedIn() == 1 && <Route exact path="/evaluate" component={Evaluations}></Route>}
+        {isLoggedIn() == 2 && <Route exact path="/sessions" component={Sessions}/>}
         <Route component={() => <Redirect to="/"/>}></Route>
       </Switch>
     </BrowserRouter>
